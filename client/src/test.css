@@ -1,0 +1,38 @@
+.colors {
+    color: #800080;
+    color: #0000ff;
+    color: #ff0000;
+    color: #008000;
+    color: #ffff00;
+    color: #ffa500;
+    
+    /* neon colors: */
+    color: #39FF14;
+    color: #CCFF00;
+    color: #FF9933;
+    color: #DF002D;
+    color: #BC13FE;
+    color: #4666FF;
+    /* /neon colors */
+
+    /* dark version neon colors: */
+    color: #1d9708;
+    color: #82a104;
+    color: #ad5f10;
+    color: #85041d;
+    color: #660c8a;
+    color: #142ba1;
+    /* /dark version neon colors */
+
+    color: #FFE3C6; /* beige */
+    color: #DBDBDB; /* off-white */
+    color: #585858; /* light grey */
+    color: #2B3834; /* medium grey */
+    color: #680000; /* blood red */ 
+    color: #b1edff;
+
+    color: #62C2EE; /* light blue */
+
+    
+    color: #1b1e24; /* use this one to find new ones */
+}
