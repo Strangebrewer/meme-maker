@@ -18,7 +18,7 @@ export const ToolbarWrapper = styled.div`
 
 export const ToolbarButton = styled.button`
     align-self: center;
-    background: transparent;
+    background: ${props => props.active ? '#444' :'transparent'};
     border: none;
     border-radius: 50%;
     color: ${props => props.disabled ? props.theme.iconDisabled : props.theme.icon};

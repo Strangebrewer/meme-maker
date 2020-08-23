@@ -3,10 +3,12 @@ import { SketchPicker } from 'react-color'
 import FontFaceObserver from 'fontfaceobserver';
 import Icon from '@mdi/react';
 import {
-    mdiBlurLinear,
-    mdiBlurRadial,
-    mdiFormatColorFill,
-    mdiPaletteOutline
+    mdiFormatAlignCenter,
+    mdiFormatAlignJustify,
+    mdiFormatAlignLeft,
+    mdiFormatAlignRight,
+    mdiFormatBold,
+    mdiFormatItalic
 } from '@mdi/js';
 
 import Popup, { PopupContent } from '../../elements/Popup';
@@ -20,30 +22,10 @@ const FONTS = [
 ]
 
 const Font = ({ getFabric, selected }) => {
-    const [disabled, setDisabled] = useState(!selected);
-    const [show, setShow] = useState(false);
-    const [top, setTop] = useState(null);
-    const [left, setLeft] = useState(null);
-    const [faunt, setFaunt] = useState('Open Sans');
-    const [fauntColor, setFauntColor] = useState('#000');
-    const [strokeColor, setStrokeColor] = useState(null);
-    const [strokeWidth, setStrokeWidth] = useState(null);
-
-    useEffect(() => {
-        setDisabled(!selected);
-    }, [selected]);
-
-    function closePopup() {
-        setShow(false);
-        setTop(null);
-        setLeft(null);
-    }
-
-    function openPopup(event) {
-        setTop(event.clientY + 20);
-        setLeft(event.clientX - 200);
-        setShow(true);
-    }
+    const [faunt, setFaunt] = useState(selected ? selected.fontFamily : 'OpenSans');
+    const [bauld, setBauld] = useState(selected ? selected.fontWeight : 400);
+    const [italic, setItalica] = useState(selected ? selected.fontStyle : 'normal');
+    const [alignment, setAlignment] = useState(selected ? selected.textAlign : 'left');
 
     function setFont(event) {
         const { value } = event.target;
@@ -55,26 +37,28 @@ const Font = ({ getFabric, selected }) => {
         getFabric().requestRenderAll();
     }
 
-    function setFontColor() {
-
+    function setBold() {
+        const change = bauld === 400 ? 700 : 400;
+        setBauld(change);
+        selected.set({ fontWeight: change });
+        getFabric().requestRenderAll();
     }
 
-    const opacity = !disabled ? '1' : '.5';
-    const cursor = !disabled ? 'pointer' : 'default';
+    function setItalic() {
+        const change = italic === 'normal' ? 'italic' : 'normal';
+        setItalica(change);
+        selected.set({ fontStyle: change });
+        getFabric().requestRenderAll();
+    }
+
+    function setTextAlignment(value) {
+        setAlignment(value);
+        selected.set({ textAlign: value });
+        getFabric().requestRenderAll();
+    }
 
     return (
         <SidebarSection>
-        <Popup
-            show={show}
-            top={top}
-            left={left}
-            close={closePopup}
-        >
-            <PopupContent>
-                <SketchPicker onChange={setFontColor} color={fauntColor} />
-            </PopupContent>
-        </Popup>
-
             <h4>Font</h4>
             <select
                 onChange={setFont}
@@ -85,18 +69,73 @@ const Font = ({ getFabric, selected }) => {
                 ))}
             </select>
 
+            <ToolbarButton
+                title="choose font color"
+                onClick={setBold}
+                active={bauld === 700}
+            >
+                <Icon
+                    path={mdiFormatBold}
+                    size={1.2}
+                />
+            </ToolbarButton>
 
-        <ToolbarButton
-            title="choose font color"
-            onClick={openPopup}
-            disabled={disabled}
-            style={{ cursor }}
-        >
-            <Icon
-                path={mdiPaletteOutline}
-                size={1.2}
-            />
-        </ToolbarButton>
+            <ToolbarButton
+                title="choose font color"
+                onClick={setItalic}
+                active={italic === 'italic'}
+            >
+                <Icon
+                    path={mdiFormatItalic}
+                    size={1.2}
+                />
+            </ToolbarButton>
+
+            <div style={{ paddingTop: '10px' }}>
+                <ToolbarButton
+                    title="choose font color"
+                    onClick={() => setTextAlignment('left')}
+                    active={alignment === 'left'}
+                >
+                    <Icon
+                        path={mdiFormatAlignLeft}
+                        size={1.2}
+                    />
+                </ToolbarButton>
+
+                <ToolbarButton
+                    title="choose font color"
+                    onClick={() => setTextAlignment('center')}
+                    active={alignment === 'center'}
+                >
+                    <Icon
+                        path={mdiFormatAlignCenter}
+                        size={1.2}
+                    />
+                </ToolbarButton>
+
+                <ToolbarButton
+                    title="choose font color"
+                    onClick={() => setTextAlignment('right')}
+                    active={alignment === 'right'}
+                >
+                    <Icon
+                        path={mdiFormatAlignRight}
+                        size={1.2}
+                    />
+                </ToolbarButton>
+
+                <ToolbarButton
+                    title="choose font color"
+                    onClick={() => setTextAlignment('justify')}
+                    active={alignment === 'justify'}
+                >
+                    <Icon
+                        path={mdiFormatAlignJustify}
+                        size={1.2}
+                    />
+                </ToolbarButton>
+            </div>
         </SidebarSection>
     )
 };

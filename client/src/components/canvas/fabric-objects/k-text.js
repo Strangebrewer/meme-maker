@@ -9,12 +9,7 @@ fabric.KText = fabric.util.createClass(fabric.Textbox, {
         if (!options.uuid) {
             options = Helper.setDefaultProperties({
                 ...options,
-                fill: '#000',
-                // stroke: '#00ff00',
-                // strokeWidth: 1,
                 backgroundColor: 'transparent',
-                // fontFamily: 'Open Sans',
-                fontWeight: 400,
                 fontSize: 50
             });
         }
@@ -28,8 +23,8 @@ fabric.KText = fabric.util.createClass(fabric.Textbox, {
         const tags = [
             this.type,
             'font',
-            'paragraph',
-            'background',
+            'border',
+            'fill',
             'position',
             'shadow'
         ];

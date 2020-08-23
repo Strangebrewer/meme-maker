@@ -10,14 +10,14 @@ import {
 import { InputGroup, SidebarSection, ToolbarButton } from '../styles';
 
 const Size = ({ getFabric, selected }) => {
-    const [disabled, setDisabled] = useState(!(selected && !selected.hasTag('size')));
+    const [disabled, setDisabled] = useState(!(selected && selected.hasTag('size')));
     const [width, setWidth] = useState(0);
     const [height, setHeight] = useState(0);
 
     useEffect(() => {
-        setDisabled(!(selected && !selected.hasTag('size')));
         setWidth(parseInt(selected ? selected.width * selected.scaleX : 0));
         setHeight(parseInt(selected ? selected.height * selected.scaleY : 0));
+        setDisabled(!(selected && selected.hasTag('size')));
     }, [selected]);
 
     function validate(input) {

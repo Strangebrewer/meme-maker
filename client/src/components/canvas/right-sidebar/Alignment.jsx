@@ -12,10 +12,10 @@ import {
 import { SidebarSection, ToolbarButton } from '../styles';
 
 const Alignment = ({ getFabric, selected }) => {
-    const [disabled, setDisabled] = useState(!(selected && !selected.hasTag('position')));
+    const [disabled, setDisabled] = useState(!(selected && selected.hasTag('position')));
 
     useEffect(() => {
-        setDisabled(!(selected && !selected.hasTag('position')));
+        setDisabled(!(selected && selected.hasTag('position')));
     }, [selected]);
 
     function setAndSelect(update) {

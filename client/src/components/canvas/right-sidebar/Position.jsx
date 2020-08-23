@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { InputGroup, SidebarSection } from '../styles';
 
 function Position({ getFabric, selected }) {
-    const [disabled, setDisabled] = useState(!(selected && !selected.hasTag('position')));
+    const [disabled, setDisabled] = useState(!(selected && selected.hasTag('position')));
     const [left, setLeft] = useState(0);
     const [top, setTop] = useState(0);
     const [angle, setAngle] = useState(0);
@@ -18,7 +18,7 @@ function Position({ getFabric, selected }) {
             setTop(0);
             setAngle(0);
         }
-        setDisabled(!(selected && !selected.hasTag('position')));
+        setDisabled(!(selected && selected.hasTag('position')));
     }, [selected]);
 
     function validate(input) {
