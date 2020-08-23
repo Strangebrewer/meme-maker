@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 
 import { InputGroup, SidebarSection } from '../styles';
 
-function Position({ getFabric, selected, hasTag }) {
+function Position({ getFabric, selected }) {
+    const [disabled, setDisabled] = useState(!(selected && !selected.hasTag('position')));
     const [left, setLeft] = useState(0);
     const [top, setTop] = useState(0);
     const [angle, setAngle] = useState(0);
@@ -17,6 +18,7 @@ function Position({ getFabric, selected, hasTag }) {
             setTop(0);
             setAngle(0);
         }
+        setDisabled(!(selected && !selected.hasTag('position')));
     }, [selected]);
 
     function validate(input) {
@@ -56,24 +58,24 @@ function Position({ getFabric, selected, hasTag }) {
         selected.setCoords();
         getFabric().requestRenderAll();
     }
-    const opacity = hasTag('position') ? '1' : '.5';
+    const opacity = !disabled ? '1' : '.5';
 
     return (
         <SidebarSection>
             <h4>Position</h4>
             <InputGroup>
                 <label style={{ opacity }}>pos x</label>
-                <input type="text" onChange={updateLeft} value={left} disabled={!hasTag('position')} style={{ opacity }} />
+                <input type="text" onChange={updateLeft} value={left} disabled={disabled} style={{ opacity }} />
             </InputGroup>
 
             <InputGroup>
                 <label style={{ opacity }}>pos y</label>
-                <input type="text" onChange={updateTop} value={top} disabled={!hasTag('position')} style={{ opacity }} />
+                <input type="text" onChange={updateTop} value={top} disabled={disabled} style={{ opacity }} />
             </InputGroup>
 
             <InputGroup>
                 <label style={{ opacity }}>angle</label>
-                <input type="text" onChange={rotate} value={angle} disabled={!hasTag('position')} style={{ opacity }} />
+                <input type="text" onChange={rotate} value={angle} disabled={disabled} style={{ opacity }} />
             </InputGroup>
         </SidebarSection>
     );

@@ -6,16 +6,18 @@ import { mdiPaletteOutline } from '@mdi/js';
 import Popup, { PopupContent } from '../../elements/Popup';
 import { InputGroup, SidebarSection, ToolbarButton } from '../styles';
 
-const Border = ({ getFabric, selected, hasTag }) => {
+const Border = ({ getFabric, selected }) => {
+    const [disabled, setDisabled] = useState(!selected);
     const [show, setShow] = useState(false);
     const [top, setTop] = useState(null);
     const [left, setLeft] = useState(null);
-    const [color, setColor] = useState(selected ? selected.stroke : '#000');
+    const [color, setColor] = useState(selected && selected.stroke ? selected.stroke : '#000');
     const [width, setWidth] = useState(selected ? selected.strokeWidth : '1');
 
     useEffect(() => {
         setColor(selected && selected.stroke ? selected.stroke : '#000');
         setWidth(selected ? selected.strokeWidth : '1');
+        setDisabled(!selected);
     }, [selected]);
 
     function setAndSelect() {
@@ -58,8 +60,8 @@ const Border = ({ getFabric, selected, hasTag }) => {
         getFabric().requestRenderAll();
     }
 
-    const cursor = hasTag('border') ? 'pointer' : 'default';
-    const opacity = hasTag('border') ? '1' : '.5';
+    const cursor = !disabled ? 'pointer' : 'default';
+    const opacity = !disabled ? '1' : '.5';
 
     return (
         <SidebarSection>
@@ -78,7 +80,7 @@ const Border = ({ getFabric, selected, hasTag }) => {
             <ToolbarButton
                 title="align left"
                 onClick={openColorPopup}
-                disabled={!hasTag('border')}
+                disabled={disabled}
                 style={{ cursor, opacity }}
             >
                 <Icon path={mdiPaletteOutline} size={1.1} />
@@ -90,7 +92,7 @@ const Border = ({ getFabric, selected, hasTag }) => {
                     onChange={updateStrokeWidth}
                     onBlur={setAndSelect}
                     value={width}
-                    disabled={!hasTag('border')}
+                    disabled={disabled}
                     style={{ opacity }}
                 />
                 <span style={{ marginLeft: '-15px', opacity }}>px</span>

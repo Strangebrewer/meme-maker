@@ -10,9 +10,12 @@ fabric.KText = fabric.util.createClass(fabric.Textbox, {
             options = Helper.setDefaultProperties({
                 ...options,
                 fill: '#000',
+                // stroke: '#00ff00',
+                // strokeWidth: 1,
                 backgroundColor: 'transparent',
-                fontFamily: 'Open Sans',
-                fontWeight: 400
+                // fontFamily: 'Open Sans',
+                fontWeight: 400,
+                fontSize: 50
             });
         }
 

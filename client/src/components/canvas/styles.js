@@ -39,14 +39,13 @@ export const SidebarWrapper = styled.div`
 `;
 
 export const SidebarSection = styled.div`
-    border-bottom: 1px solid #eee;
     color: ${props => props.theme.text};
     display: flex;
     flex-wrap: wrap;
-    padding: 25px 20px;
+    padding: 5px 20px 15px 20px;
     h4 {
         width: 100%;
-        margin-bottom: 15px;
+        margin-bottom: 5px;
     }
 `;
 

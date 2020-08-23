@@ -11,9 +11,10 @@ import {
 import Popup, { PopupContent } from '../../elements/Popup';
 import { SidebarSection, ToolbarButton } from '../styles';
 
-const Fill = ({ getFabric, selected, hasTag }) => {
+const Fill = ({ getFabric, selected }) => {
     const showInit = { fill: false, colorOne: false, colorTwo: false }
 
+    const [disabled, setDisabled] = useState(!selected);
     const [show, setShow] = useState(showInit);
     const [top, setTop] = useState(null);
     const [left, setLeft] = useState(null);
@@ -33,6 +34,7 @@ const Fill = ({ getFabric, selected, hasTag }) => {
         setFill(hasFill ? selected.fill : '#fff');
         setColorStopOne(hasGradient ? selected.fill.colorStops[0].color : '#fff');
         setColorStopTwo(hasGradient ? selected.fill.colorStops[1].color : '#222');
+        setDisabled(!selected);
     }, [selected]);
 
     function closePopup() {
@@ -112,7 +114,7 @@ const Fill = ({ getFabric, selected, hasTag }) => {
         return gradient;
     }
 
-    const cursor = hasTag('fill') ? 'pointer' : 'default';
+    const cursor = !disabled ? 'pointer' : 'default';
 
     return (
         <SidebarSection>
@@ -158,7 +160,7 @@ const Fill = ({ getFabric, selected, hasTag }) => {
                 <ToolbarButton
                     title="fill"
                     onClick={() => selectTab('fill')}
-                    disabled={!hasTag('fill')}
+                    disabled={disabled}
                     style={{ cursor }}
                 >
                     <Icon
@@ -171,7 +173,7 @@ const Fill = ({ getFabric, selected, hasTag }) => {
                 <ToolbarButton
                     title="linear gradient"
                     onClick={() => selectTab('linear')}
-                    disabled={!hasTag('fill')}
+                    disabled={disabled}
                     style={{ cursor }}
                 >
                     <Icon
@@ -184,7 +186,7 @@ const Fill = ({ getFabric, selected, hasTag }) => {
                 <ToolbarButton
                     title="radial gradient"
                     onClick={() => selectTab('radial')}
-                    disabled={!hasTag('fill')}
+                    disabled={disabled}
                     style={{ cursor }}
                 >
                     <Icon
@@ -201,7 +203,7 @@ const Fill = ({ getFabric, selected, hasTag }) => {
                         <ToolbarButton
                             title="choose fill"
                             onClick={openFillPopup}
-                            disabled={!hasTag('fill')}
+                            disabled={disabled}
                             style={{ cursor }}
                         >
                             <Icon
@@ -214,7 +216,7 @@ const Fill = ({ getFabric, selected, hasTag }) => {
                             <ToolbarButton
                                 title="choose gradient color"
                                 onClick={openColorOnePopup}
-                                disabled={!hasTag('fill')}
+                                disabled={disabled}
                                 style={{ cursor }}
                             >
                                 <Icon
@@ -226,7 +228,7 @@ const Fill = ({ getFabric, selected, hasTag }) => {
                             <ToolbarButton
                                 title="choose gradient color"
                                 onClick={openColorTwoPopup}
-                                disabled={!hasTag('fill')}
+                                disabled={disabled}
                                 style={{ cursor }}
                             >
                                 <Icon

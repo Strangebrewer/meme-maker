@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Icon from '@mdi/react';
 import {
     mdiAlignHorizontalCenter,
@@ -11,7 +11,13 @@ import {
 
 import { SidebarSection, ToolbarButton } from '../styles';
 
-const Alignment = ({ getFabric, selected, hasTag }) => {
+const Alignment = ({ getFabric, selected }) => {
+    const [disabled, setDisabled] = useState(!(selected && !selected.hasTag('position')));
+
+    useEffect(() => {
+        setDisabled(!(selected && !selected.hasTag('position')));
+    }, [selected]);
+
     function setAndSelect(update) {
         selected.set(update);
         selected.setCoords();
@@ -88,32 +94,32 @@ const Alignment = ({ getFabric, selected, hasTag }) => {
         updatePosition({ top });
     }
 
-    const cursor = hasTag('position') ? 'pointer' : 'default';
+    const cursor = !disabled ? 'pointer' : 'default';
 
     return (
         <SidebarSection>
             <h4>Alignment</h4>
-            <ToolbarButton title="align left" onClick={alignLeft} disabled={!hasTag('position')} style={{ cursor }}>
+            <ToolbarButton title="align left" onClick={alignLeft} disabled={disabled} style={{ cursor }}>
                 <Icon path={mdiAlignHorizontalLeft} size={1.1} />
             </ToolbarButton>
 
-            <ToolbarButton title="align right" onClick={alignRight} disabled={!hasTag('position')} style={{ cursor }}>
+            <ToolbarButton title="align right" onClick={alignRight} disabled={disabled} style={{ cursor }}>
                 <Icon path={mdiAlignHorizontalRight} size={1.1} />
             </ToolbarButton>
 
-            <ToolbarButton title="align top" onClick={alignTop} disabled={!hasTag('position')} style={{ cursor }}>
+            <ToolbarButton title="align top" onClick={alignTop} disabled={disabled} style={{ cursor }}>
                 <Icon path={mdiAlignVerticalTop} size={1.1} />
             </ToolbarButton>
 
-            <ToolbarButton title="align bottom" onClick={alignBottom} disabled={!hasTag('position')} style={{ cursor }}>
+            <ToolbarButton title="align bottom" onClick={alignBottom} disabled={disabled} style={{ cursor }}>
                 <Icon path={mdiAlignVerticalBottom} size={1.1} />
             </ToolbarButton>
 
-            <ToolbarButton title="horizontal center" onClick={centerHorizontally} disabled={!hasTag('position')} style={{ cursor }}>
+            <ToolbarButton title="horizontal center" onClick={centerHorizontally} disabled={disabled} style={{ cursor }}>
                 <Icon path={mdiAlignHorizontalCenter} size={1.1} />
             </ToolbarButton>
 
-            <ToolbarButton title="vertical center" onClick={centerVertically} disabled={!hasTag('position')} style={{ cursor }}>
+            <ToolbarButton title="vertical center" onClick={centerVertically} disabled={disabled} style={{ cursor }}>
                 <Icon path={mdiAlignVerticalCenter} size={1.1} />
             </ToolbarButton>
         </SidebarSection>

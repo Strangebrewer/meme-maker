@@ -6,7 +6,7 @@ import { mdiFormatColorFill } from '@mdi/js';
 import Popup, { PopupContent } from '../../elements/Popup';
 import { InputGroup, ToolbarButton, SidebarSection } from '../styles';
 
-const Shadow = ({ getFabric, selected, hasTag }) => {
+const Shadow = ({ getFabric, selected }) => {
     const shadowInit = {
         color: '#000',
         offsetX: 0,
@@ -15,6 +15,7 @@ const Shadow = ({ getFabric, selected, hasTag }) => {
     }
 
     const [shadow, setShadow] = useState(shadowInit);
+    const [disabled, setDisabled] = useState(false);
     const [show, setShow] = useState(false);
     const [top, setTop] = useState(null);
     const [left, setLeft] = useState(null);
@@ -30,6 +31,7 @@ const Shadow = ({ getFabric, selected, hasTag }) => {
                 blur: 0
             });
         }
+        setDisabled(!selected);
     }, [selected]);
 
     function closePopup() {
@@ -40,7 +42,7 @@ const Shadow = ({ getFabric, selected, hasTag }) => {
 
     function openPopup(event) {
         setTop(event.clientY + 20);
-        setLeft(event.clientX - 80);
+        setLeft(event.clientX - 200);
         setShow(true);
     }
 
@@ -61,8 +63,8 @@ const Shadow = ({ getFabric, selected, hasTag }) => {
         getFabric().requestRenderAll();
     }
 
-    const opacity = hasTag('position') ? '1' : '.5';
-    const cursor = hasTag('shadow') ? 'pointer' : 'default';
+    const opacity = !disabled ? '1' : '.5';
+    const cursor = !disabled ? 'pointer' : 'default';
 
     return (
         <SidebarSection>
@@ -86,7 +88,7 @@ const Shadow = ({ getFabric, selected, hasTag }) => {
                     onChange={handleInputChange}
                     name="offsetX"
                     value={shadow.offsetX}
-                    disabled={!hasTag('shadow')}
+                    disabled={disabled}
                     style={{ opacity }}
                 />
             </InputGroup>
@@ -98,7 +100,7 @@ const Shadow = ({ getFabric, selected, hasTag }) => {
                     onChange={handleInputChange}
                     name="offsetY"
                     value={shadow.offsetY}
-                    disabled={!hasTag('shadow')}
+                    disabled={disabled}
                     style={{ opacity }}
                 />
             </InputGroup>
@@ -110,7 +112,7 @@ const Shadow = ({ getFabric, selected, hasTag }) => {
                     onChange={handleInputChange}
                     name="blur"
                     value={shadow.blur}
-                    disabled={!hasTag('shadow')}
+                    disabled={disabled}
                     style={{ opacity }}
                 />
             </InputGroup>
@@ -119,7 +121,7 @@ const Shadow = ({ getFabric, selected, hasTag }) => {
             <ToolbarButton
                 title="choose shadow color"
                 onClick={openPopup}
-                disabled={!hasTag('shadow')}
+                disabled={disabled}
                 style={{ cursor }}
             >
                 <Icon
