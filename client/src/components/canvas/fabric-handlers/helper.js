@@ -83,8 +83,8 @@ export function registerEvents(getFabric, getSelected, setSelected) {
         const position = {
             top: parseInt(obj.get('top')),
             left: parseInt(obj.get('left')),
-            right: parseInt(obj.get('left') + obj.get('width')),
-            bottom: parseInt(obj.get('top') + obj.get('height'))
+            right: parseInt(obj.get('left') + obj.getScaledWidth()),
+            bottom: parseInt(obj.get('top') + obj.getScaledHeight())
         };
 
         function inRange(pos1, pos2) {
@@ -97,7 +97,7 @@ export function registerEvents(getFabric, getSelected, setSelected) {
             let ln = null;
             switch (side) {
                 case 'top':
-                    ln = new fabric.Line([getFabric().get('width'), 0, 0, 0], {
+                    ln = new fabric.Line([getFabric().getWidth(), 0, 0, 0], {
                         left: 0,
                         top: pos,
                         stroke: 'rgb(178, 207, 255)'
@@ -105,7 +105,7 @@ export function registerEvents(getFabric, getSelected, setSelected) {
                     lines.top = ln;
                     break;
                 case 'left':
-                    ln = new fabric.Line([0, getFabric().get('height'), 0, 0], {
+                    ln = new fabric.Line([0, getFabric().getHeight(), 0, 0], {
                         left: pos,
                         top: 0,
                         stroke: 'rgb(178, 207, 255)'
@@ -113,7 +113,7 @@ export function registerEvents(getFabric, getSelected, setSelected) {
                     lines.left = ln;
                     break;
                 case 'right':
-                    ln = new fabric.Line([0, getFabric().get('height'), 0, 0], {
+                    ln = new fabric.Line([0, getFabric().getHeight(), 0, 0], {
                         left: pos,
                         top: 0,
                         stroke: 'rgb(178, 207, 255)'
@@ -121,7 +121,7 @@ export function registerEvents(getFabric, getSelected, setSelected) {
                     lines.right = ln;
                     break;
                 case 'bottom':
-                    ln = new fabric.Line([getFabric().get('width'), 0, 0, 0], {
+                    ln = new fabric.Line([getFabric().getWidth(), 0, 0, 0], {
                         left: 0,
                         top: pos,
                         stroke: 'rgb(178, 207, 255)'
@@ -130,6 +130,7 @@ export function registerEvents(getFabric, getSelected, setSelected) {
                     break;
             }
             getFabric().add(ln).requestRenderAll();
+            setTimeout(() => getFabric().remove(ln).requestRenderAll(), 1000);
         }
 
         for (const i in objects) {
@@ -137,14 +138,46 @@ export function registerEvents(getFabric, getSelected, setSelected) {
             const objPosition = {
                 top: parseInt(objects[i].get('top')),
                 left: parseInt(objects[i].get('left')),
-                right: parseInt(objects[i].get('left') + objects[i].get('width')),
-                bottom: parseInt(objects[i].get('top') + objects[i].get('height')),
+                right: parseInt(objects[i].get('left') + objects[i].getScaledWidth()),
+                bottom: parseInt(objects[i].get('top') + objects[i].getScaledHeight()),
+            }
+
+            // moving object top lines up with object bottom
+            if (inRange(objPosition.bottom, position.top)) {
+                if (!lines.top) {
+                    drawLine('top', objPosition.bottom);
+                    obj.set('top', objPosition.bottom).setCoords();
+                }
+            }
+
+            // moving object right lines up with object left
+            if (inRange(objPosition.left, position.right)) {
+                if (!lines.right) {
+                    drawLine('right', objPosition.left);
+                    obj.set('left', objPosition.left - obj.getScaledWidth()).setCoords();
+                }
+            }
+            
+            // moving object bottom lines up with object top
+            if (inRange(objPosition.top, position.bottom)) {
+                if (!lines.bottom) {
+                    drawLine('bottom', objPosition.top);
+                    obj.set('top', objPosition.top - obj.getScaledHeight()).setCoords();
+                }
+            }
+
+            // moving object left lines up with object right
+            if (inRange(objPosition.right, position.left)) {
+                if (!lines.left) {
+                    drawLine('left', objPosition.right);
+                    obj.set('left', objPosition.right).setCoords();
+
+                }
             }
 
             if (inRange(objPosition.top, position.top)) {
                 if (!lines.top) {
                     drawLine('top', objPosition.top);
-                    matches.top = true;
                     obj.set('top', objPosition.top).setCoords();
                 }
             }
@@ -161,7 +194,7 @@ export function registerEvents(getFabric, getSelected, setSelected) {
                 if (!lines.right) {
                     drawLine('right', objPosition.right);
                     matches.right = true;
-                    obj.set('left', objPosition.right - obj.get('width')).setCoords();
+                    obj.set('left', objPosition.right - obj.getScaledWidth()).setCoords();
                 }
             }
 
@@ -169,20 +202,7 @@ export function registerEvents(getFabric, getSelected, setSelected) {
                 if (!lines.bottom) {
                     drawLine('bottom', objPosition.bottom);
                     matches.bottom = true;
-                    obj.set('top', objPosition.bottom - obj.get('height')).setCoords();
-                }
-            }
-
-            for (const key in matches) {
-                const m = matches[key];
-                const line = lines[key];
-                if (!m) console.log('!m:::', !m);
-                if (!!line) console.log('!!line:::', !!line);
-                if (!m && !!line) {
-                    console.log('there\'s a line and shouldn\'t be');
-                    getFabric().remove(line);
-                    lines[key] = null;
-                    matches[key] = false;
+                    obj.set('top', objPosition.bottom - obj.getScaledHeight()).setCoords();
                 }
             }
 
