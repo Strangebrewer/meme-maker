@@ -51,7 +51,7 @@ export const SidebarSection = styled.div`
 
 export const InputGroup = styled.div`
     margin: 0 5px;
-    width: 40px;
+    width: 36px;
     label {
         width: 100%;
     }
@@ -61,7 +61,7 @@ export const InputGroup = styled.div`
         border-bottom: 1px solid grey;
         color: ${props => props.theme.text};
         margin-top: 5px;
-        width: 40px;
+        width: 36px;
     }
     select{
         padding-top: 2px;

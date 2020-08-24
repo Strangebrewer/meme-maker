@@ -11,11 +11,11 @@ import {
 
 import { SidebarSection, ToolbarButton } from '../styles';
 
-const Alignment = ({ getFabric, selected }) => {
-    const [disabled, setDisabled] = useState(!(selected && selected.hasTag('position')));
+const Alignment = ({ getFabric, getScale, selected }) => {
+    const [disabled, setDisabled] = useState(!(selected && selected.hasTag && selected.hasTag('position')));
 
     useEffect(() => {
-        setDisabled(!(selected && selected.hasTag('position')));
+        setDisabled(!(selected && selected.hasTag && selected.hasTag('position')));
     }, [selected]);
 
     function setAndSelect(update) {
@@ -65,7 +65,7 @@ const Alignment = ({ getFabric, selected }) => {
     function alignRight() {
         if (!selected) return;
         const { width } = selected.getBoundingRect(true);
-        const cvWidth = getFabric().width;
+        const cvWidth = getFabric().width / getScale();
         const left = Math.floor(cvWidth - width);
         updatePosition({ left });
     }
@@ -73,7 +73,7 @@ const Alignment = ({ getFabric, selected }) => {
     function alignBottom() {
         if (!selected) return;
         const { height } = selected.getBoundingRect(true);
-        const cvHeight = getFabric().height;
+        const cvHeight = getFabric().height / getScale();
         const top = Math.floor(cvHeight - height);
         updatePosition({ top });
     }
@@ -81,7 +81,7 @@ const Alignment = ({ getFabric, selected }) => {
     function centerHorizontally() {
         if (!selected) return;
         const { width } = selected.getBoundingRect(true);
-        const cvWidth = getFabric().width;
+        const cvWidth = getFabric().width / getScale();
         const left = (cvWidth - width) / 2;
         updatePosition({ left });
     }
@@ -89,7 +89,7 @@ const Alignment = ({ getFabric, selected }) => {
     function centerVertically() {
         if (!selected) return;
         const { height } = selected.getBoundingRect(true);
-        const cvHeight = getFabric().height;
+        const cvHeight = getFabric().height / getScale();
         const top = (cvHeight - height) / 2;
         updatePosition({ top });
     }

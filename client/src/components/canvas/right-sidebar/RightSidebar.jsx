@@ -9,7 +9,7 @@ import ScreenSize from './ScreenSize';
 import Shadow from './Shadow';
 import Size from './Size';
 
-const Sidebar = ({ getFabric, selected, dimensions, setDimensions }) => {
+const Sidebar = ({ getFabric, getScale, selected, dimensions, setDimensions }) => {
     const [state, setState] = useState({
         screenSize: false,
         fill: false,
@@ -19,19 +19,21 @@ const Sidebar = ({ getFabric, selected, dimensions, setDimensions }) => {
     });
 
     useEffect(() => {
-        setState({
-            screenSize: !selected,
-            fill: selected ? selected.hasTag('fill') : false,
-            shadow: selected ? selected.hasTag('shadow') : false,
-            border: selected ? selected.hasTag('border') : false,
-            font: selected ? selected.hasTag('font') : false
-        })
+        if (selected && selected.hasTag) {
+            setState({
+                screenSize: !selected,
+                fill: selected ? selected.hasTag('fill') : false,
+                shadow: selected ? selected.hasTag('shadow') : false,
+                border: selected ? selected.hasTag('border') : false,
+                font: selected ? selected.hasTag('font') : false
+            });
+        }
     }, [selected]);
 
     return (
         <SidebarWrapper right>
-            <Alignment getFabric={getFabric} selected={selected} />
-            <Size getFabric={getFabric} selected={selected} />
+            <Alignment getFabric={getFabric} selected={selected} getScale={getScale} />
+            <Size getFabric={getFabric} selected={selected} getScale={getScale} />
             <Position getFabric={getFabric} selected={selected} />
             {state.screenSize && <ScreenSize selected={selected} dimensions={dimensions} setDimensions={setDimensions} />}
             {state.fill && <Fill getFabric={getFabric} selected={selected} />}

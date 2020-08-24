@@ -20,7 +20,8 @@ import './fabric-objects/k-video';
 
 const instance = {
     canvas: null,
-    selected: null
+    selected: null,
+    scale: 1
 }
 
 const FabricCanvas = ({ templateId }) => {
@@ -91,6 +92,10 @@ const FabricCanvas = ({ templateId }) => {
         instance.selected = selected;
     }
 
+    function getScale() {
+        return instance.scale;
+    }
+
     function setScale(dimensions) {
         const { width, height } = dimensions
         setScreenDimensions({ width, height });
@@ -135,6 +140,7 @@ const FabricCanvas = ({ templateId }) => {
         
         setDimensions({ width, height });
         if (dimensions.reset) getFabric().discardActiveObject().setViewportTransform([1,0,0,1,0,0]);
+        instance.scale = scale;
         getFabric().setZoom(scale);
     }
 
@@ -147,7 +153,7 @@ const FabricCanvas = ({ templateId }) => {
                     <canvas id="canvas"></canvas>
                 </CanvasWrapper>
             </div>
-            <RightSidebar getFabric={getFabric} selected={stateSelected} setDimensions={setScale} dimensions={screenDimensions} />
+            <RightSidebar getFabric={getFabric} selected={stateSelected} setDimensions={setScale} dimensions={screenDimensions} getScale={getScale} />
         </CanvasPage>
     )
 };

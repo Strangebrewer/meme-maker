@@ -9,15 +9,15 @@ import {
 
 import { InputGroup, SidebarSection, ToolbarButton } from '../styles';
 
-const Size = ({ getFabric, selected }) => {
-    const [disabled, setDisabled] = useState(!(selected && selected.hasTag('size')));
+const Size = ({ getFabric, getScale, selected }) => {
+    const [disabled, setDisabled] = useState(!(selected && selected.hasTag && selected.hasTag('size')));
     const [width, setWidth] = useState(0);
     const [height, setHeight] = useState(0);
 
     useEffect(() => {
         setWidth(parseInt(selected ? selected.width * selected.scaleX : 0));
         setHeight(parseInt(selected ? selected.height * selected.scaleY : 0));
-        setDisabled(!(selected && selected.hasTag('size')));
+        setDisabled(!(selected && selected.hasTag && selected.hasTag('size')));
     }, [selected]);
 
     function validate(input) {
@@ -25,6 +25,28 @@ const Size = ({ getFabric, selected }) => {
         let number = parseFloat(input);
         if (typeof number !== 'number' || Number.isNaN(number)) return 0;
         return number;
+    }
+
+    function keepGradient(dimension, direction) {
+        const gradient = {
+            x1: 0,
+            y1: 0,
+            x2: 0,
+            y2: 0,
+            colorStops: {
+                '0': selected.fill.colorStops[0].color,
+                '1': selected.fill.colorStops[1].color
+            }
+        }
+        if (typeof selected.fill === 'object') {
+            if (direction === 'h') {
+                gradient.x2 = dimension;
+            }
+            if (direction === 'v') {
+                gradient.y2 = dimension;
+            }
+            selected.setGradient('fill', gradient);
+        }
     }
 
     function updateWidth(event) {
@@ -35,6 +57,8 @@ const Size = ({ getFabric, selected }) => {
         /**  to get the new radius:
          * because the circle may have been manually stretched, which affects scale,
          * this will need to be calculated from the selected object's properties (e.g. radius and scales) */
+
+        keepGradient(number, 'h');
 
         if (selected.type === 'k-circle') {
             selected.set('radius', number / 2);
@@ -51,6 +75,8 @@ const Size = ({ getFabric, selected }) => {
 
         setHeight(number);
 
+        keepGradient(number, 'v');
+
         if (selected.type === 'k-circle') {
             selected.set('radius', number / 2);
         } else {
@@ -62,16 +88,15 @@ const Size = ({ getFabric, selected }) => {
 
     function stretchH() {
         if (!selected) return;
-        const cvWidth = getFabric().width
+        const cvWidth = getFabric().width / getScale();
         let modifier = 0;
         if (selected.stroke) modifier = selected.strokeWidth;
 
-        setWidth(parseInt(cvWidth - modifier));
+        setWidth(cvWidth - modifier);
 
-        const { width } = selected;
-        const scaleX = parseFloat(parseInt(cvWidth - modifier) / width);
-        selected.set({ scaleX, left: 0 });
+        keepGradient((cvWidth - modifier))
 
+        selected.set({ scaleX: 1, left: 0, width: cvWidth - modifier });
         selected.setCoords();
         getFabric().discardActiveObject();
         setTimeout(() => getFabric().setActiveObject(selected).requestRenderAll());
@@ -79,16 +104,13 @@ const Size = ({ getFabric, selected }) => {
 
     function stretchV() {
         if (!selected) return;
-        const cvHeight = getFabric().height
+        const cvHeight = getFabric().height / getScale();
         let modifier = 0;
         if (selected.stroke) modifier = selected.strokeWidth;
 
         setHeight(parseInt(cvHeight - modifier));
-
-        const { height } = selected;
-        const scaleY = parseFloat(parseInt(cvHeight - modifier) / height);
-        selected.set({ scaleY, top: 0 });
-
+        
+        selected.set({ scaleY: 1, top: 0, height: cvHeight - modifier });
         selected.setCoords();
         getFabric().discardActiveObject();
         setTimeout(() => getFabric().setActiveObject(selected).requestRenderAll());
@@ -117,17 +139,17 @@ const Size = ({ getFabric, selected }) => {
             </InputGroup>
 
             {/* <div> */}
-                <ToolbarButton title="stretch horizontally" onClick={stretchH} disabled={disabled} style={{ cursor }}>
-                    <Icon path={mdiArrowExpandHorizontal} size={1.1} />
-                </ToolbarButton>
+            <ToolbarButton title="stretch horizontally" onClick={stretchH} disabled={disabled} style={{ cursor }}>
+                <Icon path={mdiArrowExpandHorizontal} size={1.1} />
+            </ToolbarButton>
 
-                <ToolbarButton title="stretch vertically" onClick={stretchV} disabled={disabled} style={{ cursor }}>
-                    <Icon path={mdiArrowExpandVertical} size={1.1} />
-                </ToolbarButton>
+            <ToolbarButton title="stretch vertically" onClick={stretchV} disabled={disabled} style={{ cursor }}>
+                <Icon path={mdiArrowExpandVertical} size={1.1} />
+            </ToolbarButton>
 
-                <ToolbarButton title="stretch vertically" onClick={stretchAll} disabled={disabled} style={{ cursor }}>
-                    <Icon path={mdiArrowExpandAll} size={1.1} />
-                </ToolbarButton>
+            <ToolbarButton title="stretch vertically" onClick={stretchAll} disabled={disabled} style={{ cursor }}>
+                <Icon path={mdiArrowExpandAll} size={1.1} />
+            </ToolbarButton>
             {/* </div> */}
         </SidebarSection>
     );
