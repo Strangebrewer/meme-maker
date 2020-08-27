@@ -169,7 +169,7 @@ const CanvasPage = styled.div`
 
 const CanvasWrapper = styled.div`
     box-shadow: 5px 5px 5px #000;
-    height: ${props => parseFloat(props.height)}px;
+    height: ${props => props.height}px;
     margin: 60px auto;
-    width: ${props => parseFloat(props.width)}px;
+    width: ${props => props.width}px;
 `;

@@ -19,7 +19,6 @@ import { setAuthToken, resetAuthToken } from './utils/token';
 export let UserContext;
 
 const App = () => {
-    console.log('Nightmode:::', Nightmode);
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 

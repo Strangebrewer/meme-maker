@@ -19,15 +19,16 @@ const Sidebar = ({ getFabric, getScale, selected, dimensions, setDimensions }) =
     });
 
     useEffect(() => {
-        if (selected && selected.hasTag) {
+        // if (selected && selected.hasTag) {
+            const itDoHasTag = selected && selected.hasTag;
             setState({
                 screenSize: !selected,
-                fill: selected ? selected.hasTag('fill') : false,
-                shadow: selected ? selected.hasTag('shadow') : false,
-                border: selected ? selected.hasTag('border') : false,
-                font: selected ? selected.hasTag('font') : false
+                fill: itDoHasTag ? selected.hasTag('fill') : false,
+                shadow: itDoHasTag ? selected.hasTag('shadow') : false,
+                border: itDoHasTag ? selected.hasTag('border') : false,
+                font: itDoHasTag ? selected.hasTag('font') : false
             });
-        }
+        // }
     }, [selected]);
 
     return (

@@ -1,7 +1,23 @@
 import Content from '../models/ContentModel';
 const contentModel = new Content();
+import ical from 'ical';
+
+import https from 'https';
 
 export default {
+    async getCalendar(req, res) {
+        https.get(req.query.url, response => {
+            let body = '';
+            response.on('data', data => body += data);
+
+            response.on('end', () => {
+                body = ical.parseICS(body);
+                // other filtering and formatting can happen here
+                res.json(body);
+            });
+        })
+    },
+
     async get(req, res) {
         try {
             const items = await contentModel.find({ organization: req.org });

@@ -1,5 +1,7 @@
 import { fabric } from 'fabric';
 import { beforeAdding, afterAdding } from './helper';
+import ical from 'ical';
+import API from '../../../api';
 
 export function addText(getFabric) {
     beforeAdding(getFabric);
@@ -30,5 +32,39 @@ export function addText(getFabric) {
         
         getFabric().setActiveObject(object).requestRenderAll();
         object.enterEditing();
+    });
+}
+
+export async function addCalendar(getFabric) {
+    // const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const url = 'https://calendar.google.com/calendar/ical/c_4h7ad8ft028k7sj9aksceqor74%40group.calendar.google.com/public/basic.ics';
+    const { data } = await API.content.getCalendar(url);
+    console.log('data:::', data);
+    // const data = ical.parseICS(yeah.data.ical);
+
+    beforeAdding(getFabric);
+    getFabric().on('mouse:down', ({ e }) => {
+        const pointer = getFabric().getPointer(e);
+    
+        for (const k in data) {
+            if (data.hasOwnProperty(k)) {
+                const ev = data[k];
+                console.log('ev:::', ev);
+    
+                let object = new fabric.KText(ev.summary, {
+                    top: pointer.y,
+                    left: pointer.x,
+                    width: 500
+                });
+    
+                getFabric().add(object);
+                getFabric().defaultCursor = 'auto';
+                
+                getFabric().setActiveObject(object);
+                // console.log(`${ev.summary} is in ${ev.location} on the ${ev.start.getDate()} of ${months[ev.start.getMonth()]} at ${ev.start.toLocaleTimeString('en-GB')}`);
+            }
+        }
+        afterAdding(getFabric);
+        getFabric().requestRenderAll();
     });
 }

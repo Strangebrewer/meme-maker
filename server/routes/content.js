@@ -7,6 +7,9 @@ router.route('/')
     .get(isAuthenticated, ContentController.get)
     .post(isAuthenticated, ContentController.post);
 
+router.route('/calendar')
+    .get(isAuthenticated, ContentController.getCalendar);
+
 router.route('/:id')
     .get(isAuthenticated, ContentController.getOne)
     .put(isAuthenticated, ContentController.put)

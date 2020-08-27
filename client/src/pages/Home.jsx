@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Header from '../components/elements/Header';
 
-const Home = props => {
+const Home = props => {    
     return (
         <Header page="home" logout={props.logout} />
     )

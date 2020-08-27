@@ -12,6 +12,7 @@
     "axios": "^0.19.2",
     "fabric": "^3.6.3",
     "fontfaceobserver": "^2.1.0",
+    "ical": "^0.8.0",
     "mousetrap": "^1.6.5",
     "querystring": "^0.2.0",
     "react": "^16.13.1",
