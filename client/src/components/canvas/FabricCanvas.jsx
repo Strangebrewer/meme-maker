@@ -44,7 +44,7 @@ const FabricCanvas = ({ templateId }) => {
         async function getTemplate() {
             const { data } = await API.content.getOne(templateId);
             setCurrent(data);
-            const { backgroundColor, objects, width = 600, height = 500 } = data;
+            const { backgroundColor, objects, width = 1920, height = 1080 } = data;
             const json = JSON.stringify({ backgroundColor, objects, width, height });
             getFabric().loadFromJSON(json, () => {
                 calcZoom({ width, height });
