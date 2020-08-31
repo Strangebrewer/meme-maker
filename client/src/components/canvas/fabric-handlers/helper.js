@@ -112,8 +112,8 @@ export function registerEvents(getFabric, getSelected, setSelected) {
     });
 
     var ctx = getFabric().getSelectionContext(),
-        aligningLineOffset = 12,
-        aligningLineMargin = 10,
+        aligningLineOffset = 5,
+        aligningLineMargin = 4,
         aligningLineWidth = 1,
         aligningLineColor = 'rgb(0,255,0)',
         viewportTransform,
