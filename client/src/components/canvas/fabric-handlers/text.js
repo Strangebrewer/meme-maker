@@ -49,7 +49,6 @@ export async function addCalendar(getFabric) {
         for (const k in data) {
             if (data.hasOwnProperty(k)) {
                 const ev = data[k];
-                console.log('ev:::', ev);
     
                 let object = new fabric.KText(ev.summary, {
                     top: pointer.y,
