@@ -55,6 +55,11 @@ const GroupAlignment = ({ getFabric, getScale, selected }) => {
         }
     }
 
+    function getOppositeSideLength(angle, obj) {
+        let hypotenuse = (obj.width * obj.scaleX) + obj.strokeWidth;
+        return Math.sin(angle * Math.PI / 180) * hypotenuse;
+    }
+
     function groupAlignLeft() {
         if (!selected) return;
         updatePosition({ left: 0 });
@@ -72,33 +77,21 @@ const GroupAlignment = ({ getFabric, getScale, selected }) => {
             const { width } = obj.getBoundingRect(true);
             let left = limit - (obj.width * obj.scaleX);
 
-            // This is the code for groupAlignBottom - Refactor the angle math for aligning Right
             if (obj.angle) {
                 const a = obj.angle < 0 ? obj.angle + 360 : obj.angle;
                 left = limit;
 
-                if (a > 0 && a <= 90) {
-                    left -= width;
-                }
+                if (a > 0 && a < 90)
+                    left -= getOppositeSideLength(90 - a, obj);
                 
-                if (a > 90 && a < 180) {
-                    const angle = 180 - a;
-                    const hypotenuse = (obj.height * obj.scaleY) + obj.strokeWidth;
-                    const leg = Math.sin(angle * Math.PI / 180) * hypotenuse;
-                    left -= leg;
-                }
+                if (a > 180 && a < 270)
+                    left -= (width - getOppositeSideLength(270 - a, obj));
 
-                if (a > 270 && a < 360) {
-                    const angle = 360 - a;
-                    const hypotenuse = (obj.height * obj.scaleY) + obj.strokeWidth;
-                    const leg = Math.sin(angle * Math.PI / 180) * hypotenuse;
-                    left -= (width - leg);
-                };
+                if (a >= 270 && a < 360)
+                    left -= width;
             }
 
-            if (obj.strike && !obj.angle) {
-                left -= obj.strokeWidth;
-            }
+            if (obj.strike && !obj.angle) left -= obj.strokeWidth;
 
             obj.set({ left });
         }
@@ -111,12 +104,6 @@ const GroupAlignment = ({ getFabric, getScale, selected }) => {
         if (!selected) return;
         updatePosition({ top: 0 });
     }
-
-
-
-
-
-
 
     function groupAlignBottom() {
         if (!selected) return;
@@ -134,28 +121,17 @@ const GroupAlignment = ({ getFabric, getScale, selected }) => {
                 const a = obj.angle < 0 ? obj.angle + 360 : obj.angle;
                 top = floor;
 
-                if (a > 0 && a <= 90) {
+                if (a > 0 && a <= 90)
                     top -= height;
-                }
                 
-                if (a > 90 && a < 180) {
-                    const angle = 180 - a;
-                    const hypotenuse = (obj.width * obj.scaleX) + obj.strokeWidth;
-                    const leg = Math.sin(angle * Math.PI / 180) * hypotenuse;
-                    top -= leg;
-                }
+                if (a > 90 && a < 180)
+                    top -= getOppositeSideLength(180 - a, obj);
 
-                if (a > 270 && a < 360) {
-                    const angle = 360 - a;
-                    const hypotenuse = (obj.width * obj.scaleX) + obj.strokeWidth;
-                    const leg = Math.sin(angle * Math.PI / 180) * hypotenuse;
-                    top -= (height - leg);
-                };
+                if (a > 270 && a < 360)
+                    top -= (height - getOppositeSideLength(360 - a, obj));
             }
 
-            if (obj.stroke && !obj.angle) {
-                top -= obj.strokeWidth;
-            }
+            if (obj.stroke && !obj.angle) top -= obj.strokeWidth;
 
             obj.set({ top });
         }
@@ -163,18 +139,7 @@ const GroupAlignment = ({ getFabric, getScale, selected }) => {
         const selection = new fabric.ActiveSelection(objects, { canvas: getFabric() });
         getFabric().setActiveObject(selection).requestRenderAll();
     }
-
-
-
-
-
-
-
-
-
-
-
-
+    
     function groupCenterHorizontally() {
         if (!selected) return;
         const { width } = selected.getBoundingRect(true);
