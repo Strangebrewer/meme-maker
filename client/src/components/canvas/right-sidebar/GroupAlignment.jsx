@@ -73,28 +73,28 @@ const GroupAlignment = ({ getFabric, getScale, selected }) => {
             let left = limit - (obj.width * obj.scaleX);
 
             // This is the code for groupAlignBottom - Refactor the angle math for aligning Right
-            // if (obj.angle) {
-            //     const a = obj.angle < 0 ? obj.angle + 360 : obj.angle;
-            //     left = limit;
+            if (obj.angle) {
+                const a = obj.angle < 0 ? obj.angle + 360 : obj.angle;
+                left = limit;
 
-            //     if (a > 0 && a <= 90) {
-            //         left -= width;
-            //     }
+                if (a > 0 && a <= 90) {
+                    left -= width;
+                }
                 
-            //     if (a > 90 && a < 180) {
-            //         const angle = 180 - a;
-            //         const hypotenuse = (obj.width * obj.scaleX) + obj.strokeWidth;
-            //         const leg = Math.sin(angle * Math.PI / 180) * hypotenuse;
-            //         left -= leg;
-            //     }
+                if (a > 90 && a < 180) {
+                    const angle = 180 - a;
+                    const hypotenuse = (obj.height * obj.scaleY) + obj.strokeWidth;
+                    const leg = Math.sin(angle * Math.PI / 180) * hypotenuse;
+                    left -= leg;
+                }
 
-            //     if (a > 270 && a < 360) {
-            //         const angle = 360 - a;
-            //         const hypotenuse = (obj.width * obj.scaleX) + obj.strokeWidth;
-            //         const leg = Math.sin(angle * Math.PI / 180) * hypotenuse;
-            //         left -= (width - leg);
-            //     };
-            // }
+                if (a > 270 && a < 360) {
+                    const angle = 360 - a;
+                    const hypotenuse = (obj.height * obj.scaleY) + obj.strokeWidth;
+                    const leg = Math.sin(angle * Math.PI / 180) * hypotenuse;
+                    left -= (width - leg);
+                };
+            }
 
             if (obj.strike && !obj.angle) {
                 left -= obj.strokeWidth;
@@ -129,12 +129,7 @@ const GroupAlignment = ({ getFabric, getScale, selected }) => {
             const obj = objects[i];
             const { height } = obj.getBoundingRect(true);
             let top = floor - (obj.height * obj.scaleY);
-
-            /** This works great!
-             * ...as long as the items are square. Stretch one and tilt it backwards 
-             * so the rotate handle points into the top lefft quadrant. Then this doesn't work as well.
-             * Gotta figure that out...
-             */
+            
             if (obj.angle) {
                 const a = obj.angle < 0 ? obj.angle + 360 : obj.angle;
                 top = floor;
@@ -145,14 +140,14 @@ const GroupAlignment = ({ getFabric, getScale, selected }) => {
                 
                 if (a > 90 && a < 180) {
                     const angle = 180 - a;
-                    const hypotenuse = (obj.height * obj.scaleY) + obj.strokeWidth;
+                    const hypotenuse = (obj.width * obj.scaleX) + obj.strokeWidth;
                     const leg = Math.sin(angle * Math.PI / 180) * hypotenuse;
                     top -= leg;
                 }
 
                 if (a > 270 && a < 360) {
                     const angle = 360 - a;
-                    const hypotenuse = (obj.height * obj.scaleY) + obj.strokeWidth;
+                    const hypotenuse = (obj.width * obj.scaleX) + obj.strokeWidth;
                     const leg = Math.sin(angle * Math.PI / 180) * hypotenuse;
                     top -= (height - leg);
                 };
