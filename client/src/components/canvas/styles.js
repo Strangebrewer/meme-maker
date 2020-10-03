@@ -23,6 +23,7 @@ export const ToolbarButton = styled.button`
     border-radius: 50%;
     color: ${props => props.disabled ? props.theme.iconDisabled : props.theme.icon};
     height: ${props => props.height ? props.height : '30'}px;
+    padding: 1px 3px;
     margin: 0 2px;
     &:hover {
         cursor: pointer;
@@ -32,10 +33,10 @@ export const ToolbarButton = styled.button`
 export const SidebarWrapper = styled.div`
     background-color: ${props => props.theme.bg};
     box-shadow: ${props => props.right ? '-5px 0 5px #000' : '5px 0 5px #000'};
-    min-width: 260px;
+    min-width: 300px;
     overflow-y: auto;
     min-height: calc(100vh - 92px);
-    width: 260px;
+    width: 300px;
 `;
 
 export const SidebarSection = styled.div`

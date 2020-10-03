@@ -9,35 +9,35 @@
 </head>
 
 <body>
-    <p>Google Calendar API Quickstart</p>
+    <p>Google OAuth</p>
 
     <!--Add buttons to initiate auth sequence and sign out-->
-    <button id="authorize_button" style="display: none;">Authorize</button>
-    <button id="signout_button" style="display: none;">Sign Out</button>
     <button id="wtf">Google Sucks Balls</button>
 
     <pre id="content" style="white-space: pre-wrap;"></pre>
 
     <script type="text/javascript">
         // Client ID and API key from the Developer Console
-        var CLIENT_ID = '120429858789-m1bma2vfq844o46shhcupu5akvvucakq.apps.googleusercontent.com';
+        var CLIENT_ID = '961822744080-dd6oq5hel89tkk0kotusebf4sf4pnjj2.apps.googleusercontent.com';
         var API_KEY = 'AIzaSyBX2ONgByqevkaP2XiP_E6wcP_3JIc2KLU';
 
-        // Array of API discovery doc URLs for APIs used by the quickstart
-        var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
-
-        // Authorization scopes required by the API; multiple scopes can be
-        // included, separated by spaces.
-        var SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
-
-        var authorizeButton = document.getElementById('authorize_button');
-        var signoutButton = document.getElementById('signout_button');
+        var wtfBtn = document.getElementById('wtf');
 
         /**
          *  On load, called to load the auth2 library and API client library.
          */
         function handleClientLoad() {
-            gapi.load('client:auth2', initClient);
+            console.log("This sucks balls");
+                wtfBtn.onclick = function (user) {
+                    console.log('user::: ', user);
+                    console.log('what the fuck, Google');
+                    var profile = user.getBasicProfile();
+                    console.log('profile:::', profile);
+                };
+            // gapi.load('client:auth2', initClient);
+            gapi.load('auth2', function () {
+                gapi.auth2.init();
+            });
         }
 
         /**
@@ -142,7 +142,6 @@
     <script async defer src="https://apis.google.com/js/api.js" onload="this.onload=function(){};handleClientLoad()"
         onreadystatechange="if (this.readyState === 'complete') this.onload()">
         </script>
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
 </body>
 
 </html>

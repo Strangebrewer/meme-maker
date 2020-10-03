@@ -33,7 +33,10 @@ const Size = ({ getFabric, getScale, selected }) => {
             y1: 0,
             x2: 0,
             y2: 0,
-            colorStops: {
+            colorStops: {}
+        }
+        if (selected.fill.colorStops) {
+            gradient.colorStops = {
                 '0': selected.fill.colorStops[0].color,
                 '1': selected.fill.colorStops[1].color
             }

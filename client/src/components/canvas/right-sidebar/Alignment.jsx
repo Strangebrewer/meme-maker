@@ -7,7 +7,13 @@ import {
     mdiAlignVerticalBottom,
     mdiAlignVerticalCenter,
     mdiAlignVerticalTop,
+    mdiDistributeHorizontalCenter,
+    mdiDistributeVerticalCenter
 } from '@mdi/js';
+
+import GroupAlignment from './GroupAlignment';
+
+
 
 import { SidebarSection, ToolbarButton } from '../styles';
 
@@ -95,33 +101,43 @@ const Alignment = ({ getFabric, getScale, selected }) => {
     }
 
     const cursor = !disabled ? 'pointer' : 'default';
+    const isDistributable = selected && selected.type === 'activeSelection' && selected._objects.length > 2;
+    const isGroup = selected && selected.type === 'activeSelection';
 
     return (
         <SidebarSection>
             <h4>Alignment</h4>
-            <ToolbarButton title="align left" onClick={alignLeft} disabled={disabled} style={{ cursor }}>
-                <Icon path={mdiAlignHorizontalLeft} size={1.1} />
-            </ToolbarButton>
-
-            <ToolbarButton title="align right" onClick={alignRight} disabled={disabled} style={{ cursor }}>
-                <Icon path={mdiAlignHorizontalRight} size={1.1} />
-            </ToolbarButton>
-
-            <ToolbarButton title="align top" onClick={alignTop} disabled={disabled} style={{ cursor }}>
-                <Icon path={mdiAlignVerticalTop} size={1.1} />
-            </ToolbarButton>
-
-            <ToolbarButton title="align bottom" onClick={alignBottom} disabled={disabled} style={{ cursor }}>
-                <Icon path={mdiAlignVerticalBottom} size={1.1} />
-            </ToolbarButton>
-
-            <ToolbarButton title="horizontal center" onClick={centerHorizontally} disabled={disabled} style={{ cursor }}>
-                <Icon path={mdiAlignHorizontalCenter} size={1.1} />
-            </ToolbarButton>
-
-            <ToolbarButton title="vertical center" onClick={centerVertically} disabled={disabled} style={{ cursor }}>
-                <Icon path={mdiAlignVerticalCenter} size={1.1} />
-            </ToolbarButton>
+            {isGroup
+                ? (
+                    <GroupAlignment getFabric={getFabric} getScale={getScale} selected={selected} />
+                ) : (
+                    <>
+                        <ToolbarButton title="align left" onClick={alignLeft} disabled={disabled} style={{ cursor }}>
+                            <Icon path={mdiAlignHorizontalLeft} size={1.1} />
+                        </ToolbarButton>
+                        
+                        <ToolbarButton title="align right" onClick={alignRight} disabled={disabled} style={{ cursor }}>
+                            <Icon path={mdiAlignHorizontalRight} size={1.1} />
+                        </ToolbarButton>
+            
+                        <ToolbarButton title="align top" onClick={alignTop} disabled={disabled} style={{ cursor }}>
+                            <Icon path={mdiAlignVerticalTop} size={1.1} />
+                        </ToolbarButton>
+            
+                        <ToolbarButton title="align bottom" onClick={alignBottom} disabled={disabled} style={{ cursor }}>
+                            <Icon path={mdiAlignVerticalBottom} size={1.1} />
+                        </ToolbarButton>
+            
+                        <ToolbarButton title="center horizontally" onClick={centerHorizontally} disabled={disabled} style={{ cursor }}>
+                            <Icon path={mdiAlignHorizontalCenter} size={1.1} />
+                        </ToolbarButton>
+            
+                        <ToolbarButton title="center vertically" onClick={centerVertically} disabled={disabled} style={{ cursor }}>
+                            <Icon path={mdiAlignVerticalCenter} size={1.1} />
+                        </ToolbarButton>
+                    </>
+                )
+            }
         </SidebarSection>
     )
 }
