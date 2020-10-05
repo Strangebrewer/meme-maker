@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { fabric } from 'fabric';
 import Icon from '@mdi/react';
 import {
@@ -15,54 +15,46 @@ import {
 import { ToolbarButton } from '../styles';
 
 const GroupAlignment = ({ getFabric, getScale, selected }) => {
-    const [disabled, setDisabled] = useState(!(selected && selected.hasTag && selected.hasTag('position')));
-
-    useEffect(() => {
-        setDisabled(!(selected && selected.hasTag && selected.hasTag('position')));
-    }, [selected]);
-
-    function setAndSelect(update) {
-        selected.set(update);
-        selected.setCoords();
-        getFabric().discardActiveObject();
-        setTimeout(() => getFabric().setActiveObject(selected).requestRenderAll());
-    }
-
-    function updatePosition(coords) {
-        const bb = selected.getBoundingRect(true);
-        const update = {};
-
-        for (const key in coords) {
-            if (coords[key] === '') coords[key] = 0;
-
-            const coord = parseFloat(coords[key]);
-            if (Number.isNaN(coord)) continue;
-            if (bb[key] === coord) continue;
-
-            if (bb[key] > coord) {
-                const diff = bb[key] - coord;
-                update[key] = parseFloat(selected[key] - diff);
-            }
-
-            if (bb[key] < coord) {
-                const diff = coord - bb[key];
-                update[key] = parseFloat(selected[key] + diff);
-            }
-        }
-
-        if (Object.keys(update).length) {
-            setAndSelect(update);
-        }
-    }
-
-    function getOppositeSideLength(angle, obj) {
-        let hypotenuse = (obj.width * obj.scaleX) + obj.strokeWidth;
-        return Math.sin(angle * Math.PI / 180) * hypotenuse;
-    }
-
     function groupAlignLeft() {
         if (!selected) return;
-        updatePosition({ left: 0 });
+        const limit = selected.left;
+        const objects = selected.getObjects();
+
+        getFabric().discardActiveObject();
+
+        for (let i = 0; i < objects.length; i++) {
+            const obj = objects[i];
+            const { width } = obj.getBoundingRect(true);
+            let left = limit;
+
+            if (obj.angle) {
+                // convert negative angles to their positive counterpart (e.g. -44 becomes 316)
+                const a = obj.angle < 0 ? obj.angle + 360 : obj.angle;
+
+                if (a > 0 && a < 90) {
+                    const angle = 90 - a;
+                    const hypotenuse = (obj.height * obj.scaleY) + obj.strokeWidth;
+                    const leg = Math.cos(angle * Math.PI / 180) * hypotenuse;
+                    left += leg;
+                }
+                
+                if (a >= 90 && a <= 180) left += width;
+
+                if (a > 180 && a < 270) {
+                    const angle = 270 - a;
+                    const hypotenuse = (obj.width * obj.scaleX) + obj.strokeWidth;
+                    const leg = Math.sin(angle * Math.PI / 180) * hypotenuse;
+                    left += leg;
+                }
+            }
+
+            if (obj.stroke && !obj.angle) left += obj.strokeWidth;
+
+            obj.set({ left });            
+        }
+
+        const selection = new fabric.ActiveSelection(objects, { canvas: getFabric() });
+        getFabric().setActiveObject(selection).requestRenderAll();
     }
 
     function groupAlignRight() {
@@ -79,19 +71,25 @@ const GroupAlignment = ({ getFabric, getScale, selected }) => {
 
             if (obj.angle) {
                 const a = obj.angle < 0 ? obj.angle + 360 : obj.angle;
+                const hypotenuse = (obj.width * obj.scaleX) + obj.strokeWidth;
                 left = limit;
 
-                if (a > 0 && a < 90)
-                    left -= getOppositeSideLength(90 - a, obj);
+                if (a > 0 && a < 90) {
+                    const angle = 90 - a;
+                    const leg = Math.sin(angle * Math.PI / 180) * hypotenuse;
+                    left -= leg;
+                }
                 
-                if (a > 180 && a < 270)
-                    left -= (width - getOppositeSideLength(270 - a, obj));
+                if (a > 180 && a < 270) {
+                    const angle = 270 - a;
+                    const leg = Math.sin(angle * Math.PI / 180) * hypotenuse;
+                    left -= width - leg;
+                }
 
-                if (a >= 270 && a < 360)
-                    left -= width;
+                if (a >= 270 && a < 360) left -= width;
             }
 
-            if (obj.strike && !obj.angle) left -= obj.strokeWidth;
+            if (obj.stroke && !obj.angle) left -= obj.strokeWidth;
 
             obj.set({ left });
         }
@@ -102,7 +100,41 @@ const GroupAlignment = ({ getFabric, getScale, selected }) => {
 
     function groupAlignTop() {
         if (!selected) return;
-        updatePosition({ top: 0 });
+        const ceiling = selected.top;
+        const objects = selected.getObjects();
+
+        getFabric().discardActiveObject();
+
+        for (let i = 0; i < objects.length; i++) {
+            const obj = objects[i];
+            const { height } = obj.getBoundingRect(true);
+            let top = ceiling;
+
+            if (obj.angle) {
+                const a = obj.angle < 0 ? obj.angle + 360 : obj.angle;
+                
+                if (a >= 90 && a < 180) {
+                    const angle = 180 - a;
+                    const hypotenuse = (obj.height * obj.scaleY) + obj.strokeWidth;
+                    top += Math.cos(angle * Math.PI / 180) * hypotenuse;
+                }
+
+                if (a >= 180 && a <= 270) top += height;
+
+                if (a > 270 && a < 360) {
+                    const angle = 360 - a;
+                    const hypotenuse = (obj.width * obj.scaleX) + obj.strokeWidth;
+                    top += Math.sin(angle * Math.PI / 180) * hypotenuse;
+                }
+            }
+
+            if (obj.stroke && !obj.angle) top += obj.strokeWidth;
+
+            obj.set({ top });            
+        }
+
+        const selection = new fabric.ActiveSelection(objects, { canvas: getFabric() });
+        getFabric().setActiveObject(selection).requestRenderAll();
     }
 
     function groupAlignBottom() {
@@ -121,14 +153,21 @@ const GroupAlignment = ({ getFabric, getScale, selected }) => {
                 const a = obj.angle < 0 ? obj.angle + 360 : obj.angle;
                 top = floor;
 
-                if (a > 0 && a <= 90)
-                    top -= height;
+                if (a > 0 && a <= 90) top -= height;
                 
-                if (a > 90 && a < 180)
-                    top -= getOppositeSideLength(180 - a, obj);
+                if (a > 90 && a < 180) {
+                    const angle = 180 - a;
+                    const hypotenuse = (obj.width * obj.scaleX) + obj.strokeWidth;
+                    const leg = Math.sin(angle * Math.PI / 180) * hypotenuse;
+                    top -= leg;
+                }
 
-                if (a > 270 && a < 360)
-                    top -= (height - getOppositeSideLength(360 - a, obj));
+                if (a > 270 && a < 360) {
+                    const angle = 360 - a;
+                    const hypotenuse = (obj.width * obj.scaleX) + obj.strokeWidth;
+                    const leg = Math.sin(angle * Math.PI / 180) * hypotenuse;
+                    top -= height - leg;
+                }
             }
 
             if (obj.stroke && !obj.angle) top -= obj.strokeWidth;
@@ -142,16 +181,85 @@ const GroupAlignment = ({ getFabric, getScale, selected }) => {
     
     function groupCenterHorizontally() {
         if (!selected) return;
-        const { width } = selected.getBoundingRect(true);
-        let left
-        updatePosition({ left });
+        const center = selected.top + selected.height / 2;
+        const objects = selected.getObjects();
+
+        getFabric().discardActiveObject().requestRenderAll();
+
+        for (let i = 0; i < objects.length; i++) {
+            const obj = objects[i];
+            const { height } = obj.getBoundingRect(true);
+            let top = center - height / 2;
+
+            if (obj.angle) {
+                const a = obj.angle < 0 ? obj.angle + 360 : obj.angle;
+                
+                if (a >= 90 && a < 180) {
+                    const angle = 180 - a;
+                    const hypotenuse = (obj.height * obj.scaleY) + obj.strokeWidth;
+                    top += Math.cos(angle * Math.PI / 180) * hypotenuse;
+                }
+
+                if (a >= 180 && a <= 270) top += height;
+
+                if (a > 270 && a < 360) {
+                    const angle = 360 - a;
+                    const hypotenuse = (obj.width * obj.scaleX) + obj.strokeWidth;
+                    top += Math.sin(angle * Math.PI / 180) * hypotenuse;
+                }
+            }
+
+            if (obj.stroke && !obj.angle) top += obj.strokeWidth;
+
+            obj.set({ top });
+        }
+
+        const selection = new fabric.ActiveSelection(objects, { canvas: getFabric() });
+        getFabric().setActiveObject(selection).requestRenderAll();
+
     }
 
     function groupCenterVertically() {
         if (!selected) return;
-        const { height } = selected.getBoundingRect(true);
-        let top
-        updatePosition({ top });
+        const center = selected.left + selected.width / 2;
+        const objects = selected.getObjects();
+
+        getFabric().discardActiveObject().requestRenderAll();
+
+        for (let i = 0; i < objects.length; i++) {
+            const obj = objects[i];
+            const { width } = obj.getBoundingRect(true);
+            let left = center - width / 2;
+
+            if (obj.angle) {
+                // convert negative angles to their positive counterpart (e.g. -44 becomes 316)
+                const a = obj.angle < 0 ? obj.angle + 360 : obj.angle;
+
+                if (a > 0 && a < 90) {
+                    const angle = 90 - a;
+                    const hypotenuse = (obj.height * obj.scaleY) + obj.strokeWidth;
+                    const leg = Math.cos(angle * Math.PI / 180) * hypotenuse;
+                    left += leg;
+                }
+                
+                if (a >= 90 && a <= 180) left += width;
+
+                if (a > 180 && a < 270) {
+                    const angle = 270 - a;
+                    const hypotenuse = (obj.width * obj.scaleX) + obj.strokeWidth;
+                    const leg = Math.sin(angle * Math.PI / 180) * hypotenuse;
+                    left += leg;
+                }
+            }
+
+            if (obj.stroke && !obj.angle) left += obj.strokeWidth;
+
+            obj.set({ left });
+        }
+
+        const selection = new fabric.ActiveSelection(objects, { canvas: getFabric() });
+        getFabric().setActiveObject(selection).requestRenderAll();
+        
     }
 
     function distributeHorizontally() {
@@ -171,9 +279,9 @@ const GroupAlignment = ({ getFabric, getScale, selected }) => {
 
     }
 
-    const cursor = !disabled ? 'pointer' : 'default';
-    const isDistributable = selected && selected.type === 'activeSelection' && selected._objects.length > 2;
     const isGroup = selected && selected.type === 'activeSelection';
+    const isDistributable = selected && selected.type === 'activeSelection' && selected._objects.length > 2;
+    const cursor = isGroup ? 'pointer' : 'default';
     const cursorTwo = isDistributable ? 'pointer' : 'default';
 
     return (
@@ -194,11 +302,11 @@ const GroupAlignment = ({ getFabric, getScale, selected }) => {
                 <Icon path={mdiAlignVerticalBottom} size={1.1} />
             </ToolbarButton>
 
-            <ToolbarButton title="center horizontally" onClick={groupCenterHorizontally} disabled={!isGroup} style={{ cursor }}>
+            <ToolbarButton title="center horizontally" onClick={groupCenterVertically} disabled={!isGroup} style={{ cursor }}>
                 <Icon path={mdiAlignHorizontalCenter} size={1.1} />
             </ToolbarButton>
 
-            <ToolbarButton title="center vertically" onClick={groupCenterVertically} disabled={!isGroup} style={{ cursor }}>
+            <ToolbarButton title="center vertically" onClick={groupCenterHorizontally} disabled={!isGroup} style={{ cursor }}>
                 <Icon path={mdiAlignVerticalCenter} size={1.1} />
             </ToolbarButton>
             
