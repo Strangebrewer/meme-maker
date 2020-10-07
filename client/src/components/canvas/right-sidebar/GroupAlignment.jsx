@@ -271,12 +271,234 @@ const GroupAlignment = ({ getFabric, getScale, selected }) => {
 
         getFabric().discardActiveObject().requestRenderAll();
 
-        objects.sort((a, b) => (a.left > b.left) ? 1 : -1);
-        let leftMostObject = objects[0];
+        objects.sort((a, b) => {
+            const aRect = a.getBoundingRect(true);
+            const bRect = b.getBoundingRect(true);
+            return aRect.left > bRect.left ? 1 : -1;
+        });
+        let leftmostObject = objects[0];
+
+        const objectRightsides = objects.map(o => {
+            const { left, width } = o.getBoundingRect(true);
+            return left + width;
+        });
+        const max = Math.max(...objectRightsides);
+        const index = objectRightsides.indexOf(max);
+        let rightmostObject = objects[index];
+
+        if (leftmostObject.uuid === rightmostObject.uuid) {
+            leftmostObject = objects.shift();
+
+            const combinedWidth = objects.reduce((total, obj) => {
+                const { width } = obj.getBoundingRect(true);
+                return total + width;
+            }, 0);
+            let spaceBetween = (width - combinedWidth) / (objects.length - 1);
+
+            let left = selected.left;
+
+            if (combinedWidth < width) {
+                spaceBetween = (width - combinedWidth) / (objects.length + 1);
+                left += spaceBetween;
+            }
+
+            for (let i = 0; i < objects.length; i++) {
+                const obj = objects[i];
+                const br = obj.getBoundingRect(true);
+                let modifier = 0;
+
+                if (obj.angle) {
+                    const a = obj.angle < 0 ? obj.angle + 360 : obj.angle;
+
+                    if (a > 0 && a < 90) {
+                        const hypotenuse = (obj.height * obj.scaleY) + obj.strokeWidth;
+                        const leg = Math.sin(a * Math.PI / 180) * hypotenuse;
+                        modifier += leg;
+                    }
+
+                    if (a >= 90 && a <= 180) modifier += br.width;
+
+                    if (a > 180 && a < 270) {
+                        const angle = 270 - a;
+                        const hypotenuse = (obj.width * obj.scaleX) + obj.strokeWidth;
+                        const leg = Math.sin(angle * Math.PI / 180) * hypotenuse;
+                        modifier += leg;
+                    }
+                }
+                
+                if (combinedWidth > width) {
+                    if (i === 0) left += 1;
+                    if (i === objects.length - 1) left -= 1;
+                }
+
+                obj.set({ left: left + modifier });
+                left += br.width + spaceBetween;
+            }
+
+            objects.unshift(leftmostObject);
+
+        } else {
+            const combinedWidth = objects.reduce((total, obj) => {
+                const { width } = obj.getBoundingRect(true);
+                return total + width;
+            }, 0);
+            let spaceBetween = (width - combinedWidth) / (objects.length - 1);
+            rightmostObject = objects.splice(index, 1);
+            objects.push(rightmostObject[0]);
+
+            let left = selected.left;
+            for (let i = 0; i < objects.length - 1; i++) {
+                const obj = objects[i];
+                const br = obj.getBoundingRect(true);
+                let modifier = 0;
+
+                if (obj.angle) {
+                    const a = obj.angle < 0 ? obj.angle + 360 : obj.angle;
+
+                    if (a > 0 && a < 90) {
+                        const hypotenuse = (obj.height * obj.scaleY) + obj.strokeWidth;
+                        const leg = Math.sin(a * Math.PI / 180) * hypotenuse;
+                        modifier += leg;
+                    }
+
+                    if (a >= 90 && a <= 180) modifier += br.width;
+
+                    if (a > 180 && a < 270) {
+                        const angle = 270 - a;
+                        const hypotenuse = (obj.width * obj.scaleX) + obj.strokeWidth;
+                        const leg = Math.sin(angle * Math.PI / 180) * hypotenuse;
+                        modifier += leg;
+                    }
+                }
+
+                obj.set({ left: left + modifier });
+                left += br.width + spaceBetween;
+            }
+        }
+
+        const selection = new fabric.ActiveSelection(objects, { canvas: getFabric() });
+        getFabric().setActiveObject(selection).requestRenderAll();
     }
 
     function distributeVertically() {
+        if (!selected) return;
+        if (selected.type !== 'activeSelection') return;
 
+        const objects = selected.getObjects();
+        const { height } = selected.getBoundingRect(true);
+
+        getFabric().discardActiveObject().requestRenderAll();
+        objects.sort((a, b) => {
+            const aRect = a.getBoundingRect(true);
+            const bRect = b.getBoundingRect(true);
+            return aRect.top > bRect.top ? 1 : -1;
+        });
+        let topObject = objects[0];
+        
+        const objectBottoms = objects.map(o => {
+            const { top, height } = o.getBoundingRect(true);
+            return top + height;
+        });
+        const max = Math.max(...objectBottoms);
+        const index = objectBottoms.indexOf(max);
+        let bottomObject = objects[index];
+        
+        if (topObject.uuid === bottomObject.uuid) {
+            topObject = objects.shift();
+
+            const combinedHeight = objects. reduce((total, obj) => {
+                const { height } = obj.getBoundingRect(true);
+                return total + height;
+            }, 0);
+            let spaceBetween = (height - combinedHeight) / (objects.length - 1);
+
+            let top = selected.top;
+
+            if (combinedHeight < height) {
+                spaceBetween = (height - combinedHeight) / (objects.length + 1);
+                top += spaceBetween;
+            }
+
+            for (let i = 0; i < objects.length; i++) {
+                const obj = objects[i];
+                const br = obj.getBoundingRect(true);
+                let modifier = 0;
+
+                if (obj.angle) {
+                    const a = obj.angle < 0 ? obj.angle + 360 : obj.angle;
+
+                    if (a > 90 && a < 180) {
+                        const angle = 180 - a;
+                        const hypotenuse = (obj.height * obj.scaleY) + obj.strokeWidth;
+                        const leg = Math.cos(angle * Math.PI / 180) * hypotenuse;
+                        modifier += leg;
+                    }
+
+                    if (a >= 180 && a <= 270) modifier += br.height;
+
+                    if (a > 270 && a < 360) {
+                        const angle = 360 - a;
+                        const hypotenuse = (obj.width * obj.scaleX) + obj.strokeWidth;
+                        const leg = Math.sin(angle * Math.PI / 180) * hypotenuse;
+                        modifier += leg;
+                    }
+                }
+                
+                if (combinedHeight > height) {
+                    if (i === 0) top += 1;
+                    if (i === objects.length - 1) top -= 1;
+                }
+
+                obj.set({ top: top + modifier });
+                top += br.height + spaceBetween;
+            }
+
+            objects.unshift(topObject);
+
+        } else {
+            const combinedHeight = objects. reduce((total, obj) => {
+                const { height } = obj.getBoundingRect(true);
+                return total + height;
+            }, 0);
+            const spaceBetween = (height - combinedHeight) / (objects.length - 1);
+
+            bottomObject = objects.splice(index, 1);
+            objects.push(bottomObject[0]);
+
+            let top = selected.top;
+
+            for (let i = 0; i < objects.length - 1; i++) {
+                const obj = objects[i];
+                const br = obj.getBoundingRect(true);
+                let modifier = 0;
+
+                if (obj.angle) {
+                    const a = obj.angle < 0 ? obj.angle + 360 : obj.angle;
+
+                    if (a > 90 && a < 180) {
+                        const angle = 180 - a;
+                        const hypotenuse = (obj.height * obj.scaleY) + obj.strokeWidth;
+                        const leg = Math.cos(angle * Math.PI / 180) * hypotenuse;
+                        modifier += leg;
+                    }
+
+                    if (a >= 180 && a <= 270) modifier += br.height;
+
+                    if (a > 270 && a < 360) {
+                        const angle = 360 - a;
+                        const hypotenuse = (obj.width * obj.scaleX) + obj.strokeWidth;
+                        const leg = Math.sin(angle * Math.PI / 180) * hypotenuse;
+                        modifier += leg;
+                    }
+                }
+
+                obj.set({ top: top + modifier });
+                top += br.height + spaceBetween;
+            }
+        }
+
+        const selection = new fabric.ActiveSelection(objects, { canvas: getFabric() });
+        getFabric().setActiveObject(selection).requestRenderAll();
     }
 
     const isGroup = selected && selected.type === 'activeSelection';
