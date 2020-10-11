@@ -7,7 +7,7 @@ import {
 
 import { InputGroup, SidebarSection, ToolbarButton } from '../styles';
 
-function Position({ getFabric, selected }) {
+function Position({ getFabric, selected, pushVersion }) {
     const [disabled, setDisabled] = useState(!(selected && selected.hasTag && selected.hasTag('position')));
     const [left, setLeft] = useState(0);
     const [top, setTop] = useState(0);
@@ -82,17 +82,17 @@ function Position({ getFabric, selected }) {
             <h4>Position</h4>
             <InputGroup>
                 <label style={{ opacity }}>pos x</label>
-                <input type="text" onChange={updateLeft} value={left} disabled={disabled} style={{ opacity }} />
+                <input type="text" onChange={updateLeft} onBlur={pushVersion} value={left} disabled={disabled} style={{ opacity }} />
             </InputGroup>
 
             <InputGroup>
                 <label style={{ opacity }}>pos y</label>
-                <input type="text" onChange={updateTop} value={top} disabled={disabled} style={{ opacity }} />
+                <input type="text" onChange={updateTop} onBlur={pushVersion} value={top} disabled={disabled} style={{ opacity }} />
             </InputGroup>
 
             <InputGroup>
                 <label style={{ opacity }}>angle</label>
-                <input type="text" onChange={rotate} value={angle} disabled={disabled} style={{ opacity }} />
+                <input type="text" onChange={rotate} onBlur={pushVersion} value={angle} disabled={disabled} style={{ opacity }} />
             </InputGroup>
 
             <ToolbarButton title="align right" onClick={flipH} disabled={disabled} style={{ cursor }}>

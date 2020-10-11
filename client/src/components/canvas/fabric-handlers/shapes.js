@@ -1,7 +1,7 @@
 import { fabric } from 'fabric';
 import { beforeAdding, afterAdding } from './helper';
 
-export function addCircle(getFabric) {
+export function addCircle(getFabric, pushVersion) {
     beforeAdding(getFabric);
 
     let isMouseDown = false;
@@ -65,10 +65,11 @@ export function addCircle(getFabric) {
 
         object.setCoords();
         getFabric().setActiveObject(object).requestRenderAll();
+        pushVersion();
     });
 }
 
-export function addRect(getFabric) {
+export function addRect(getFabric, pushVersion) {
     beforeAdding(getFabric);
 
     let isMouseDown = false;
@@ -130,10 +131,11 @@ export function addRect(getFabric) {
 
         object.setCoords();
         getFabric().setActiveObject(object).requestRenderAll();
+        pushVersion();
     });
 }
 
-export function addTriangle(getFabric) {
+export function addTriangle(getFabric, pushVersion) {
     beforeAdding(getFabric);
 
     let isMouseDown = false;
@@ -180,5 +182,6 @@ export function addTriangle(getFabric) {
 
         object.setCoords();
         getFabric().setActiveObject(object).requestRenderAll();
+        pushVersion();
     });
 }

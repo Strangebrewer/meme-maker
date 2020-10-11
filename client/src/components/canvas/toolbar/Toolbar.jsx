@@ -5,20 +5,14 @@ import styled from 'styled-components';
 import ArrangementToolbar from './Arrangement';
 import ShapesToolbar from './Shapes';
 import TextToolbar from './Text';
+import UndoRedoToolbar from './UndoRedo';
 
 import { ToolbarWrapper } from '../styles';
-
-const SCREEN_DIMENSIONS = [
-    '3840 x 2160',
-    '1920 x 1080',
-    '1600 x 900',
-    '1368 x 768'
-]
 
 const Toolbar = (props) => {
     const history = useHistory();
 
-    const { getFabric, selected, save } = props;
+    const { getFabric, selected, save, pushVersion, undo, redo } = props;
 
     function cancel() {
         history.push('/canvas');
@@ -26,9 +20,10 @@ const Toolbar = (props) => {
 
     return (
         <ToolbarWrapper>
-            <ShapesToolbar getFabric={getFabric} />
-            <TextToolbar getFabric={getFabric} />
-            <ArrangementToolbar getFabric={getFabric} selected={selected} />
+            <ShapesToolbar getFabric={getFabric} pushVersion={pushVersion} />
+            <TextToolbar getFabric={getFabric} pushVersion={pushVersion} />
+            <ArrangementToolbar getFabric={getFabric} selected={selected} pushVersion={pushVersion} />
+            <UndoRedoToolbar undo={undo} redo={redo} />
             <Buttons>
                 <button onClick={save}>Save</button>
                 <button onClick={cancel}>Cancel</button>

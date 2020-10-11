@@ -60,7 +60,7 @@ const Content = props => {
             <Header page="content" logout={props.logout} />
             <Wrapper>
                 <div style={{ width: '80px', height: '60px', borderRadius: '10px', margin: '10px', display: 'flex' }}>
-                    <button style={{ margin: 'auto' }} onClick={() => setShow(true)}>WTF</button>
+                    <button style={{ margin: 'auto' }} onClick={() => setShow(true)}>New Canvas</button>
                 </div>
                 {templates && templates.map(item => {
                     return (

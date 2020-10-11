@@ -6,7 +6,7 @@ import { mdiFormatColorFill } from '@mdi/js';
 import Popup, { PopupContent } from '../../elements/Popup';
 import { InputGroup, ToolbarButton, SidebarSection } from '../styles';
 
-const Shadow = ({ getFabric, selected }) => {
+const Shadow = ({ getFabric, selected, pushVersion }) => {
     const shadowInit = {
         color: '#000',
         offsetX: 0,
@@ -51,6 +51,7 @@ const Shadow = ({ getFabric, selected }) => {
         setShadow(update);
         selected.setShadow(update);
         getFabric().requestRenderAll();
+        pushVersion();
     }
 
     function handleInputChange(event) {
@@ -61,6 +62,7 @@ const Shadow = ({ getFabric, selected }) => {
 
         selected.setShadow({ ...shadow, [name]: change });
         getFabric().requestRenderAll();
+        pushVersion();
     }
 
     const opacity = !disabled ? '1' : '.5';

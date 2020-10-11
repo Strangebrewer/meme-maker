@@ -12,7 +12,7 @@ import {
 
 import { ToolbarButton } from '../styles';
 
-function ArrangementToolbar({ getFabric, selected }) {
+function ArrangementToolbar({ getFabric, selected, pushVersion }) {
     const [show, setShow] = useState(false);
     const [top, setTop] = useState(null);
     const [left, setLeft] = useState(null);
@@ -29,6 +29,7 @@ function ArrangementToolbar({ getFabric, selected }) {
         const group = selected.toGroup();
         getFabric().discardActiveObject();
         setTimeout(() => getFabric().setActiveObject(group).requestRenderAll());
+        pushVersion();
     }
 
     function ungroup() {
@@ -38,6 +39,7 @@ function ArrangementToolbar({ getFabric, selected }) {
         objects.forEach(o => getFabric().add(o));
         getFabric().setActiveObject(objects[0])
         setTimeout(() => getFabric().discardActiveObject().requestRenderAll());
+        pushVersion();
     }
 
     function groupDisabled() {
@@ -51,23 +53,27 @@ function ArrangementToolbar({ getFabric, selected }) {
     function bringForward() {
         selected.bringForward(true);
         getFabric().requestRenderAll();
+        pushVersion();
     }
 
     function sendBackward() {
         selected.sendBackwards(true);
         getFabric().requestRenderAll();
+        pushVersion();
     }
 
     function bringToFront() {
         selected.bringToFront();
         getFabric().requestRenderAll();
         closePopup();
+        pushVersion();
     }
 
     function sendToBack() {
         selected.sendToBack();
         getFabric().requestRenderAll();
         closePopup();
+        pushVersion();
     }
 
     function onContextMenu(event, type) {

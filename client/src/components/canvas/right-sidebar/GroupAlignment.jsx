@@ -14,7 +14,7 @@ import {
 
 import { ToolbarButton } from '../styles';
 
-const GroupAlignment = ({ getFabric, getScale, selected }) => {
+const GroupAlignment = ({ getFabric, selected, pushVersion }) => {
     function groupAlignLeft() {
         if (!selected) return;
         const limit = selected.left;
@@ -55,6 +55,7 @@ const GroupAlignment = ({ getFabric, getScale, selected }) => {
 
         const selection = new fabric.ActiveSelection(objects, { canvas: getFabric() });
         getFabric().setActiveObject(selection).requestRenderAll();
+        pushVersion();
     }
 
     function groupAlignRight() {
@@ -96,6 +97,7 @@ const GroupAlignment = ({ getFabric, getScale, selected }) => {
 
         const selection = new fabric.ActiveSelection(objects, { canvas: getFabric() });
         getFabric().setActiveObject(selection).requestRenderAll();
+        pushVersion();
     }
 
     function groupAlignTop() {
@@ -135,6 +137,7 @@ const GroupAlignment = ({ getFabric, getScale, selected }) => {
 
         const selection = new fabric.ActiveSelection(objects, { canvas: getFabric() });
         getFabric().setActiveObject(selection).requestRenderAll();
+        pushVersion();
     }
 
     function groupAlignBottom() {
@@ -177,6 +180,7 @@ const GroupAlignment = ({ getFabric, getScale, selected }) => {
 
         const selection = new fabric.ActiveSelection(objects, { canvas: getFabric() });
         getFabric().setActiveObject(selection).requestRenderAll();
+        pushVersion();
     }
     
     function groupCenterHorizontally() {
@@ -216,6 +220,7 @@ const GroupAlignment = ({ getFabric, getScale, selected }) => {
 
         const selection = new fabric.ActiveSelection(objects, { canvas: getFabric() });
         getFabric().setActiveObject(selection).requestRenderAll();
+        pushVersion();
 
     }
 
@@ -259,6 +264,7 @@ const GroupAlignment = ({ getFabric, getScale, selected }) => {
 
         const selection = new fabric.ActiveSelection(objects, { canvas: getFabric() });
         getFabric().setActiveObject(selection).requestRenderAll();
+        pushVersion();
         
     }
 
@@ -378,6 +384,7 @@ const GroupAlignment = ({ getFabric, getScale, selected }) => {
 
         const selection = new fabric.ActiveSelection(objects, { canvas: getFabric() });
         getFabric().setActiveObject(selection).requestRenderAll();
+        pushVersion();
     }
 
     function distributeVertically() {
@@ -499,6 +506,7 @@ const GroupAlignment = ({ getFabric, getScale, selected }) => {
 
         const selection = new fabric.ActiveSelection(objects, { canvas: getFabric() });
         getFabric().setActiveObject(selection).requestRenderAll();
+        pushVersion();
     }
 
     const isGroup = selected && selected.type === 'activeSelection';

@@ -21,7 +21,7 @@ const FONTS = [
     'VT323'
 ]
 
-const Font = ({ getFabric, selected }) => {
+const Font = ({ getFabric, selected, pushVersion }) => {
     const [faunt, setFaunt] = useState(selected ? selected.fontFamily : 'OpenSans');
     const [bauld, setBauld] = useState(selected ? selected.fontWeight : 400);
     const [italic, setItalica] = useState(selected ? selected.fontStyle : 'normal');
@@ -35,6 +35,7 @@ const Font = ({ getFabric, selected }) => {
             fontFamily: value
         });
         getFabric().requestRenderAll();
+        pushVersion();
     }
 
     function setBold() {
@@ -42,6 +43,7 @@ const Font = ({ getFabric, selected }) => {
         setBauld(change);
         selected.set({ fontWeight: change });
         getFabric().requestRenderAll();
+        pushVersion();
     }
 
     function setItalic() {
@@ -49,12 +51,14 @@ const Font = ({ getFabric, selected }) => {
         setItalica(change);
         selected.set({ fontStyle: change });
         getFabric().requestRenderAll();
+        pushVersion();
     }
 
     function setTextAlignment(value) {
         setAlignment(value);
         selected.set({ textAlign: value });
         getFabric().requestRenderAll();
+        pushVersion();
     }
 
     return (

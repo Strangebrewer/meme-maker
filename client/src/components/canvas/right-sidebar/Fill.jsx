@@ -11,7 +11,7 @@ import {
 import Popup, { PopupContent } from '../../elements/Popup';
 import { SidebarSection, ToolbarButton } from '../styles';
 
-const Fill = ({ getFabric, selected }) => {
+const Fill = ({ getFabric, selected, pushVersion }) => {
     const showInit = { fill: false, colorOne: false, colorTwo: false }
 
     const [disabled, setDisabled] = useState(!selected);
@@ -47,6 +47,7 @@ const Fill = ({ getFabric, selected }) => {
         setFill(color.hex);
         selected.set('fill', color.hex);
         getFabric().requestRenderAll();
+        pushVersion();
     }
 
     function setColorOne(color) {
@@ -54,6 +55,7 @@ const Fill = ({ getFabric, selected }) => {
         const gradient = getGradientObject(color, 'one');
         selected.setGradient('fill', gradient);
         getFabric().requestRenderAll();
+        pushVersion();
     }
 
     function setColorTwo(color) {
@@ -61,6 +63,7 @@ const Fill = ({ getFabric, selected }) => {
         const gradient = getGradientObject(color, 'two');
         selected.setGradient('fill', gradient);
         getFabric().requestRenderAll();
+        pushVersion();
     }
 
     function openFillPopup(event) {

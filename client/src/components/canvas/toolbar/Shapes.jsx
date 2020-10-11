@@ -9,17 +9,17 @@ import {
 
 import { ToolbarButton } from '../styles';
 
-function ShapesToolbar({ getFabric }) {
+function ShapesToolbar({ getFabric, pushVersion }) {
     const newCircle = () => {
-        addCircle(getFabric);
+        addCircle(getFabric, pushVersion);
     }
 
     const newRect = () => {
-        addRect(getFabric);
+        addRect(getFabric, pushVersion);
     }
 
     const newTriangle = () => {
-        addTriangle(getFabric);
+        addTriangle(getFabric, pushVersion);
     }
 
     return (

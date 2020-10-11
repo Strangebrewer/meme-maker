@@ -21,7 +21,9 @@ import './fabric-objects/k-video';
 const instance = {
     canvas: null,
     selected: null,
-    scale: 1
+    scale: 1,
+    versions: [],
+    versionIndex: 0
 }
 
 const FabricCanvas = ({ templateId }) => {
@@ -39,7 +41,7 @@ const FabricCanvas = ({ templateId }) => {
 
         instance.canvas = canvas;
 
-        registerEvents(getFabric, getSelected, setSelected);
+        registerEvents(getFabric, getSelected, setSelected, pushVersion, undo, redo);
 
         async function getTemplate() {
             const { data } = await API.content.getOne(templateId);
@@ -49,8 +51,10 @@ const FabricCanvas = ({ templateId }) => {
             getFabric().loadFromJSON(json, () => {
                 calcZoom({ width, height });
                 setScreenDimensions({ width, height });
+                instance.versionIndex = 0;
+                instance.versions = [JSON.stringify(getFabric())];
                 getFabric().requestRenderAll();
-            })
+            });
         }
         
         getTemplate();
@@ -81,6 +85,47 @@ const FabricCanvas = ({ templateId }) => {
 
     function getFabric() {
         return instance.canvas;
+    }
+
+    function pushVersion() {
+        console.log("Push Version Running muthafucka@")
+        const version = JSON.stringify(instance.canvas);
+
+        if (instance.versions.length > 9) {
+            instance.versionIndex--;
+            instance.versions.shift();
+        }
+
+        if (instance.versionIndex < instance.versions.length - 1) {
+            instance.versions.splice(instance.versionIndex + 1);
+        }
+
+        instance.versionIndex++;
+        instance.versions.push(version);
+    }
+
+    function undo() {
+        instance.versionIndex--;
+        if (instance.versionIndex < 0) {
+            instance.versionIndex = 0;
+            return;
+        }
+        const version = instance.versions[instance.versionIndex]
+        getFabric().loadFromJSON(version, () => {
+            getFabric().requestRenderAll();
+        });
+    }
+
+    function redo() {
+        instance.versionIndex++;
+        if (instance.versionIndex > instance.versions.length - 1) {
+            instance.versionIndex = instance.versions.length - 1;
+            return;
+        }
+        const version = instance.versions[instance.versionIndex]
+        getFabric().loadFromJSON(version, () => {
+            getFabric().requestRenderAll();
+        });
     }
 
     function getSelected() {
@@ -148,12 +193,26 @@ const FabricCanvas = ({ templateId }) => {
         <CanvasPage>
             <LeftSidebar getFabric={getFabric} setDimensions={setScale} dimensions={screenDimensions} />
             <div style={{ width: '100%' }}>
-                <Toolbar getFabric={getFabric} save={save} selected={stateSelected} setDimensions={setScale} dimensions={screenDimensions} />
+                <Toolbar
+                    getFabric={getFabric}
+                    save={save}
+                    selected={stateSelected}
+                    pushVersion={pushVersion}
+                    undo={undo}
+                    redo={redo}
+                />
                 <CanvasWrapper width={dimensions.width} height={dimensions.height}>
                     <canvas id="canvas"></canvas>
                 </CanvasWrapper>
             </div>
-            <RightSidebar getFabric={getFabric} selected={stateSelected} setDimensions={setScale} dimensions={screenDimensions} getScale={getScale} />
+            <RightSidebar
+                getFabric={getFabric}
+                selected={stateSelected}
+                setDimensions={setScale}
+                dimensions={screenDimensions}
+                getScale={getScale}
+                pushVersion={pushVersion}
+            />
         </CanvasPage>
     )
 };

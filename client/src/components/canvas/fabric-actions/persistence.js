@@ -9,11 +9,3 @@ export const deleteSelected = getFabric => {
 
     getFabric().discardActiveObject().requestRenderAll();
 }
-
-export const undo = getFabric => {
-    // after setting up a versioning system
-}
-
-export const redo = getFabric => {
-    // after setting up a versioning system
-}

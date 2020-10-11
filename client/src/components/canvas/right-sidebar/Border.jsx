@@ -6,7 +6,7 @@ import { mdiPaletteOutline } from '@mdi/js';
 import Popup, { PopupContent } from '../../elements/Popup';
 import { InputGroup, SidebarSection, ToolbarButton } from '../styles';
 
-const Border = ({ getFabric, selected }) => {
+const Border = ({ getFabric, selected, pushVersion }) => {
     const [disabled, setDisabled] = useState(!selected);
     const [show, setShow] = useState(false);
     const [top, setTop] = useState(null);
@@ -42,6 +42,7 @@ const Border = ({ getFabric, selected }) => {
         setColor(color.hex);
         selected.set('stroke', color.hex);
         getFabric().requestRenderAll();
+        pushVersion();
     }
 
     function updateStrokeWidth(event) {
@@ -58,6 +59,7 @@ const Border = ({ getFabric, selected }) => {
             selected.set({ strokeWidth: width });
         }
         getFabric().requestRenderAll();
+        pushVersion();
     }
 
     const cursor = !disabled ? 'pointer' : 'default';

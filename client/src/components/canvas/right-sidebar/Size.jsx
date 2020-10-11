@@ -9,7 +9,7 @@ import {
 
 import { InputGroup, SidebarSection, ToolbarButton } from '../styles';
 
-const Size = ({ getFabric, getScale, selected }) => {
+const Size = ({ getFabric, getScale, selected, pushVersion }) => {
     const [disabled, setDisabled] = useState(!(selected && selected.hasTag && selected.hasTag('size')));
     const [width, setWidth] = useState(0);
     const [height, setHeight] = useState(0);
@@ -89,7 +89,7 @@ const Size = ({ getFabric, getScale, selected }) => {
         getFabric().requestRenderAll();
     }
 
-    function stretchH() {
+    function stretchH(push = true) {
         if (!selected) return;
         const cvWidth = getFabric().width / getScale();
         let modifier = 0;
@@ -103,9 +103,11 @@ const Size = ({ getFabric, getScale, selected }) => {
         selected.setCoords();
         getFabric().discardActiveObject();
         setTimeout(() => getFabric().setActiveObject(selected).requestRenderAll());
+        pushVersion();
+        if (push) pushVersion();
     }
 
-    function stretchV() {
+    function stretchV(push = true) {
         if (!selected) return;
         const cvHeight = getFabric().height / getScale();
         let modifier = 0;
@@ -117,12 +119,14 @@ const Size = ({ getFabric, getScale, selected }) => {
         selected.setCoords();
         getFabric().discardActiveObject();
         setTimeout(() => getFabric().setActiveObject(selected).requestRenderAll());
+        if (push) pushVersion();
     }
 
     function stretchAll() {
         if (!selected) return;
-        stretchH();
-        stretchV();
+        stretchH(false);
+        stretchV(false);
+        pushVersion();
     }
 
     const opacity = !disabled ? '1' : '.5';
@@ -133,12 +137,12 @@ const Size = ({ getFabric, getScale, selected }) => {
             <h4>Size</h4>
             <InputGroup>
                 <label style={{ opacity }}>width</label>
-                <input type="text" onChange={updateWidth} value={width} disabled={disabled} style={{ opacity }} />
+                <input type="text" onChange={updateWidth} onBlur={pushVersion} value={width} disabled={disabled} style={{ opacity }} />
             </InputGroup>
 
             <InputGroup>
                 <label style={{ opacity }}>height</label>
-                <input type="text" onChange={updateHeight} value={height} disabled={disabled} style={{ opacity }} />
+                <input type="text" onChange={updateHeight} onBlur={pushVersion} value={height} disabled={disabled} style={{ opacity }} />
             </InputGroup>
 
             {/* <div> */}

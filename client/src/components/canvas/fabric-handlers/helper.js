@@ -2,7 +2,7 @@ import { fabric } from 'fabric';
 import Mousetrap from 'mousetrap';
 import { v4 as uuidv4 } from 'uuid';
 
-import { deleteSelected, redo, undo } from '../fabric-actions/persistence';
+import { deleteSelected } from '../fabric-actions/persistence';
 
 let copy;
 
@@ -25,7 +25,7 @@ export function afterAdding(getFabric) {
     getFabric().forEachObject((o) => o.selectable = true);
 }
 
-export function registerEvents(getFabric, getSelected, setSelected) {
+export function registerEvents(getFabric, getSelected, setSelected, pushVersion, undo, redo) {
     getFabric().on('selection:created', (e) => {
         setSelected(e);
     });
@@ -44,6 +44,7 @@ export function registerEvents(getFabric, getSelected, setSelected) {
         getFabric().discardActiveObject();
         setTimeout(() => getFabric().setActiveObject(selected).requestRenderAll());
         setSelected(e);
+        pushVersion();
     });
 
     getFabric().on('mouse:wheel', opt => {
@@ -65,13 +66,17 @@ export function registerEvents(getFabric, getSelected, setSelected) {
         opt.target.snapThreshold = 10;
     });
 
+    getFabric().on('object:moving', opt => {
+        opt.snapThreshold = 10;
+    })
+
     Mousetrap.bind('del', () => {
         deleteSelected(getFabric);
         setSelected({ target: null });
     });
 
-    Mousetrap.bind('mod+z', () => undo);
-    Mousetrap.bind('shift+mod+z', () => redo);
+    Mousetrap.bind('mod+z', undo);
+    Mousetrap.bind('shift+mod+z', redo);
     Mousetrap.bind('esc', () => getFabric().discardActiveObject().requestRenderAll());
 
     Mousetrap.bind('mod+a', (e) => {

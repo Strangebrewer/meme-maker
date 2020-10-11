@@ -17,7 +17,7 @@ import GroupAlignment from './GroupAlignment';
 
 import { SidebarSection, ToolbarButton } from '../styles';
 
-const Alignment = ({ getFabric, getScale, selected }) => {
+const Alignment = ({ getFabric, getScale, selected, pushVersion }) => {
     const [disabled, setDisabled] = useState(!(selected && selected.hasTag && selected.hasTag('position')));
 
     useEffect(() => {
@@ -55,6 +55,7 @@ const Alignment = ({ getFabric, getScale, selected }) => {
 
         if (Object.keys(update).length) {
             setAndSelect(update);
+            pushVersion();
         }
     }
 
@@ -109,7 +110,7 @@ const Alignment = ({ getFabric, getScale, selected }) => {
             <h4>Alignment</h4>
             {isGroup
                 ? (
-                    <GroupAlignment getFabric={getFabric} getScale={getScale} selected={selected} />
+                    <GroupAlignment getFabric={getFabric} getScale={getScale} selected={selected} pushVersion={pushVersion} />
                 ) : (
                     <>
                         <ToolbarButton title="align left" onClick={alignLeft} disabled={disabled} style={{ cursor }}>

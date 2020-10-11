@@ -5,13 +5,15 @@ import { mdiFormatTextbox, mdiCalendarMonthOutline } from '@mdi/js';
 
 import { ToolbarButton } from '../styles';
 
-const Text = ({ getFabric }) => {
+const Text = ({ getFabric, pushVersion }) => {
     function newText() {
         addText(getFabric);
+        pushVersion();
     }
 
     function newCalendar() {
         addCalendar(getFabric);
+        pushVersion();
     }
 
     return (
