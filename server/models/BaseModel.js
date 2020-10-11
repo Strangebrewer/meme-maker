@@ -27,8 +27,7 @@ export default class BaseModel {
         return count;
     }
 
-    async create(data, userId, orgId) {
-        if (userId) data.user = userId;
+    async create(data, orgId) {
         if (orgId) data.organization = orgId;
 
         const created = await this.Schema.create(data);        

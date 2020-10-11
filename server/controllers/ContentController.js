@@ -38,7 +38,7 @@ export default {
 
     async post(req, res) {
         try {
-            const item = await contentModel.create(req.body, req.user._id, req.org);
+            const item = await contentModel.create(req.body, req.org);
             res.json(item);
         } catch (error) {
             res.status(400).json({ error: error.message });

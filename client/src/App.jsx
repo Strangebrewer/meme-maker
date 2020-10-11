@@ -11,7 +11,7 @@ import Content from './pages/Content';
 import Home from './pages/Home';
 import Authoritaw from './pages/Authoritaw';
 import Spinner from './components/elements/Spinner';
-import Sucka from './pages/Sucka';
+import Images from './pages/Images';
 
 import API from './api';
 import { setAuthToken, resetAuthToken } from './utils/token';
@@ -88,8 +88,8 @@ const App = () => {
 
                         <Route
                             exact
-                            path="/sucka"
-                            component={Authentication(Sucka, { authenticated: user, required: true, logout })}
+                            path="/images"
+                            component={Authentication(Images, { authenticated: user, required: true, logout })}
                         />
 
                         <Route
