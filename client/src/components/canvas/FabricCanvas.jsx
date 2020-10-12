@@ -195,6 +195,7 @@ const FabricCanvas = ({ templateId }) => {
             <div style={{ width: '100%' }}>
                 <Toolbar
                     getFabric={getFabric}
+                    getScale={getScale}
                     save={save}
                     selected={stateSelected}
                     pushVersion={pushVersion}

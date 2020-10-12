@@ -17,7 +17,7 @@ const Modal = props => {
             <Content show={props.show}>
                 <CloseBtn onClick={props.close}>&times;</CloseBtn>
                 <Body>
-                    {props.items.map((item, i) => (
+                    {props.items && props.items.map((item, i) => (
                         <div key={i}>
                             <label style={{ display: 'block', width: '100%', color: 'white', fontSize: '16px', marginBottom: '10px' }}>{item.label}</label>
                             <input
@@ -28,6 +28,7 @@ const Modal = props => {
                             />
                         </div>
                     ))}
+                    {props.content && props.content}
                     <Buttons>
                         <button onClick={props.callback}>OK</button>
                         <button onClick={props.close}>Close</button>

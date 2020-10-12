@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
 import ArrangementToolbar from './Arrangement';
+import ImageToolbar from './Image';
 import ShapesToolbar from './Shapes';
 import TextToolbar from './Text';
 import UndoRedoToolbar from './UndoRedo';
@@ -12,7 +13,7 @@ import { ToolbarWrapper } from '../styles';
 const Toolbar = (props) => {
     const history = useHistory();
 
-    const { getFabric, selected, save, pushVersion, undo, redo } = props;
+    const { getFabric, getScale, selected, save, pushVersion, undo, redo } = props;
 
     function cancel() {
         history.push('/canvas');
@@ -24,6 +25,7 @@ const Toolbar = (props) => {
             <TextToolbar getFabric={getFabric} pushVersion={pushVersion} />
             <ArrangementToolbar getFabric={getFabric} selected={selected} pushVersion={pushVersion} />
             <UndoRedoToolbar undo={undo} redo={redo} />
+            <ImageToolbar getFabric={getFabric} getScale={getScale} pushVersion={pushVersion} />
             <Buttons>
                 <button onClick={save}>Save</button>
                 <button onClick={cancel}>Cancel</button>
