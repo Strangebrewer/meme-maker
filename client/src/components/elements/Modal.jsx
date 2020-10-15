@@ -30,8 +30,8 @@ const Modal = props => {
                     ))}
                     {props.content && props.content}
                     <Buttons>
-                        <button onClick={props.callback}>OK</button>
-                        <button onClick={props.close}>Close</button>
+                        {props.callback && <button onClick={props.callback}>OK</button>}
+                        {props.close && props.callback && <button onClick={props.close}>Close</button>}
                     </Buttons>
                 </Body>
             </Content>

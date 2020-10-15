@@ -191,7 +191,11 @@ const FabricCanvas = ({ templateId }) => {
 
     return (
         <CanvasPage>
-            <LeftSidebar getFabric={getFabric} setDimensions={setScale} dimensions={screenDimensions} />
+            <LeftSidebar
+                getFabric={getFabric}
+                getScale={getScale}
+                pushVersion={pushVersion}
+            />
             <div style={{ width: '100%' }}>
                 <Toolbar
                     getFabric={getFabric}

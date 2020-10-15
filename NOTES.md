@@ -1,6 +1,6 @@
 
 
-NEXT: set it up to be able to add an image to the canvas from your uploaded images
+NEXT: When you elect to set an image as background, it should ask if you want to resize the canvas to fit the image, if you want to stretch the image to fit the canvas, or if you want to center the image at the largest size possible while retaining its aspect ratio.
 
 
 

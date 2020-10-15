@@ -44,9 +44,12 @@ export const SidebarSection = styled.div`
     display: flex;
     flex-wrap: wrap;
     padding: 5px 20px 15px 20px;
-    h4 {
+    h3, h4 {
         width: 100%;
         margin-bottom: 5px;
+    }
+    h3 {
+        font-size: 22px;
     }
 `;
 
