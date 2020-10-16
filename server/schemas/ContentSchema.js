@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 
 const ContentSchema = new Schema({
     backgroundColor: { type: String, default: '#fff' },
+    backgroundImage: String,
     height: Number,
     width: Number,
     name: String,

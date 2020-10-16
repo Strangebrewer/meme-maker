@@ -3,7 +3,7 @@ import ImagesList from './ImagesList';
 
 import { SidebarWrapper } from '../styles';
 
-const Sidebar = ({ getFabric, getScale, pushVersion, selected }) => {
+const Sidebar = ({ getFabric, getScale, pushVersion, selected, setDimensions }) => {
     function hasTag(tag) {
         return selected && ((selected.hasTag && selected.hasTag(tag)) || selected.type === 'group');
     }
@@ -14,6 +14,7 @@ const Sidebar = ({ getFabric, getScale, pushVersion, selected }) => {
                 getFabric={getFabric}
                 getScale={getScale}
                 pushVersion={pushVersion}
+                setDimensions={setDimensions}
             />
         </SidebarWrapper>
     )

@@ -46,8 +46,9 @@ const FabricCanvas = ({ templateId }) => {
         async function getTemplate() {
             const { data } = await API.content.getOne(templateId);
             setCurrent(data);
-            const { backgroundColor, objects, width = 1920, height = 1080 } = data;
-            const json = JSON.stringify({ backgroundColor, objects, width, height });
+            let { backgroundColor, backgroundImage, objects, width = 1920, height = 1080 } = data;
+            if (backgroundImage) backgroundImage = JSON.parse(backgroundImage);
+            const json = JSON.stringify({ backgroundColor, backgroundImage, objects, width, height });
             getFabric().loadFromJSON(json, () => {
                 calcZoom({ width, height });
                 setScreenDimensions({ width, height });
@@ -68,13 +69,19 @@ const FabricCanvas = ({ templateId }) => {
     }, [dimensions]);
 
     async function save() {
-        const objects = getFabric().getObjects();
-        const bg = getFabric().backgroundColor;
+        const canvas = getFabric();
+        const objects = canvas.getObjects();
+        const bg = canvas.backgroundColor;
+        const bgImg = canvas.backgroundImage;
+        if (bgImg && typeof bgImg === 'object') {
+            console.log('it\'s a fookin\' object!');
+        }
         const { width, height } = screenDimensions;
 
         const template = await API.content.edit({
             _id: templateId,
             backgroundColor: bg,
+            backgroundImage: JSON.stringify(bgImg),
             name: current.name,
             height,
             width,
@@ -88,7 +95,6 @@ const FabricCanvas = ({ templateId }) => {
     }
 
     function pushVersion() {
-        console.log("Push Version Running muthafucka@")
         const version = JSON.stringify(instance.canvas);
 
         if (instance.versions.length > 9) {
@@ -195,6 +201,7 @@ const FabricCanvas = ({ templateId }) => {
                 getFabric={getFabric}
                 getScale={getScale}
                 pushVersion={pushVersion}
+                setDimensions={setScale}
             />
             <div style={{ width: '100%' }}>
                 <Toolbar

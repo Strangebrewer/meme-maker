@@ -1,6 +1,13 @@
 
 
-NEXT: When you elect to set an image as background, it should ask if you want to resize the canvas to fit the image, if you want to stretch the image to fit the canvas, or if you want to center the image at the largest size possible while retaining its aspect ratio.
+NEXT:
+- setting a background image to fit is working
+- setting the canvas to conform to the background image is working
+- setup the background image fill, and background image stretch
+
+
+
+Add ability to 'favorite' your images - those are the ones that should show in the left sidbar. Add a search function to the left sidebar for finding the rest.
 
 
 
