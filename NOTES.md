@@ -1,6 +1,6 @@
 
 
-NEXT: Add ability to 'favorite' your images - those are the ones that should show in the left sidbar. Add a search function to the left sidebar for finding the rest.
+NEXT: Make it so you can use the alignment buttons on groups.
 
 
 
