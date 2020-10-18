@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 
 const ImageSchema = new Schema({
     image: { type: String, required: true },
+    favorite: Boolean,
     largeImage: String,
     midImage: String,
     thumbnail: String,

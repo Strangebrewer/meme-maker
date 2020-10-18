@@ -7,6 +7,7 @@ export default class BaseAPI {
     }
 
     get(query) {
+        console.log('querystring.stringify(query):::', querystring.stringify(query));
         return axios.get(`${this.endpoint}${query ? '?' + querystring.stringify(query) : ''}`);
     }
 

@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
 import Header from '../components/elements/Header';
-import Example from '../components/Example';
 import API from '../api';
+import Icon from '@mdi/react';
+import { mdiHeart, mdiHeartOutline  } from '@mdi/js';
+
+ 
 
 const Images = props => {
     const [images, setImages] = useState(null);
@@ -38,6 +42,14 @@ const Images = props => {
         setImages([...images, image.data]);
     }
 
+    async function toggleFavorite(img) {
+        console.log('img:::', img);
+        const favorite = img.favorite ? false : true;
+        const image = await API.image.edit({ ...img, favorite: !img.favorite });
+        const results = await API.image.get();
+        setImages(results.data);
+    }
+
     return (
         <div>
             <Header page="Images" logout={props.logout} />
@@ -50,11 +62,49 @@ const Images = props => {
                 placeholder="upload an image"
             />
 
-            {images && images.map((image, i) => {
-                return <img key={i} src={image.thumbnail} style={{ margin: '15px' }} />
-            })}
+            <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                {images && images.map((image, i) => {
+                    return (
+                        <ImageContainer>
+                            <Icon
+                                size={1}
+                                color={image.favorite ? 'red' : 'white'}
+                                path={image.favorite ? mdiHeart : mdiHeartOutline}
+                                onClick={() => toggleFavorite(image)}
+                            />
+                            <img key={i} src={image.midImage} />
+                        </ImageContainer>
+                    )
+                })}
+            </div>
         </div>
     )
 }
 
 export default Images;
+
+export const ImageContainer = styled.div`
+    display: flex;
+    height: 250px;
+    width: 250px;
+    position: relative;
+    background-color: #000;
+    margin: 5px;
+    border: 1px solid ${props => props.theme.purple};
+
+    img {
+        max-height: 100%;
+        max-width: 100%;
+        align-self: center;
+        margin: auto;
+    }
+
+    svg {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        z-index: 99;
+        cursor: pointer;
+    }
+`;
+

@@ -20,7 +20,7 @@ const ImagesList = ({ getFabric, getScale, pushVersion, setDimensions }) => {
 
     useEffect(() => {
         async function fetchImages() {
-            const results = await API.image.get();
+            const results = await API.image.get({ favorite: true });
             setImages(results.data);
         }
         fetchImages();
@@ -35,13 +35,15 @@ const ImagesList = ({ getFabric, getScale, pushVersion, setDimensions }) => {
         setShow(true);
     }
 
-    function insertImage() {
-        addImage(getFabric, getScale, pushVersion, selected);
+    function insertImage(event) {
+        const { value } = event.target;
+        addImage(value, getFabric, getScale, pushVersion, selected);
         setShow(false);
     }
 
-    function setAsBackground(position) {
-        switch (position) {
+    function setAsBackground(event) {
+        const { value } = event.target;
+        switch (value) {
             case 'fill':
                 setBackgroundImageFill(getFabric, getScale, pushVersion, selected)
                 break;
@@ -57,19 +59,23 @@ const ImagesList = ({ getFabric, getScale, pushVersion, setDimensions }) => {
 
         setShow(false);
     }
-
+    
     const content = (
-        <>
-            <Button onClick={insertImage}>add to canvas</Button>
-            <p style={{ textAlign: 'center', marginTop: '25px' }}>set as background:</p>
-            <Buttons>
-                <button onClick={() => setAsBackground('fit')}>fit</button>
-                <button onClick={() => setAsBackground('stretch')}>stretch</button>
-                <button onClick={() => setAsBackground('fill')}>fill</button>
-            </Buttons>
-            <p style={{ textAlign: 'center', marginTop: '15px' }}>or:</p>
-            <Button center onClick={setAsBackground}>conform canvas to image</Button>
-        </>
+        <ContentContainer>
+            <p>add to canvas:</p>
+            <div>
+                <button onClick={insertImage} value="largeImage">full</button>
+                <button onClick={insertImage} value="midImage">mid</button>
+                <button onClick={insertImage} value="thumbnail">thumb</button>
+            </div>
+            <p>or set as background:</p>
+            <div>
+                <button onClick={setAsBackground} value="fit">fit</button>
+                <button onClick={setAsBackground} value="stretch">stretch</button>
+                <button onClick={setAsBackground} value="fill">fill</button>
+                <button onClick={setAsBackground} value="conform">conform canvas to image</button>
+            </div>
+        </ContentContainer>
     )
 
     return (
@@ -97,7 +103,7 @@ const ImagesList = ({ getFabric, getScale, pushVersion, setDimensions }) => {
 
 export default ImagesList;
 
-const ImageContainer = styled.div`
+export const ImageContainer = styled.div`
     display: flex;
     height: 110px;
     width: 110px;
@@ -114,38 +120,38 @@ const ImageContainer = styled.div`
     }
 `;
 
-const Buttons = styled.div`
-    display: flex;
-    justify-content: space-between;
+const ContentContainer = styled.div`
+    width: 300px;
 
-    button {
-        background-color: #1d928c;
-        border: none;
-        border-radius: 5px;
-        color: #fff;
-        font-size: ${props => props.full && '1.8rem'};
-        height: ${props => props.full && '40px'};
-        margin: 10px 0;
-        outline: transparent;
-        padding: 8px 12px;
-        text-shadow: 0 0 5px #000;
-        transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
-        width: 28%;
+    p {
+        text-align: center;
     }
-`;
 
-const Button = styled.button`
-    background-color: #1d928c;
-    border: none;
-    border-radius: 5px;
-    color: #fff;
-    display: block;
-    font-size: ${props => props.full && '1.8rem'};
-    height: ${props => props.full && '40px'};
-    margin: 10px auto;
-    outline: transparent;
-    padding: 8px 12px;
-    text-shadow: 0 0 5px #000;
-    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
-    width: 100%;
+    p:last-of-type {
+        margin-top: 25px;
+    }
+
+    div {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+
+        button {
+            background-color: #1d928c;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            margin: 10px 0;
+            outline: transparent;
+            padding: 8px 12px;
+            text-shadow: 0 0 5px #000;
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            width: 28%;
+        }
+
+        button:nth-child(4) {
+            width: 100%;
+        }
+    }
 `;

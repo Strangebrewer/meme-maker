@@ -9,6 +9,7 @@ router.route('/')
 
 router.route('/:id')
     .get(isAuthenticated, ImageController.getOne)
+    .put(isAuthenticated, ImageController.put)
     .delete(isAuthenticated, ImageController.destroy);
 
 export default router;

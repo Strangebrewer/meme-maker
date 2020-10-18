@@ -1,10 +1,10 @@
 import { fabric } from 'fabric';
 import { beforeAdding, afterAdding } from './helper';
 
-export function addImage(getFabric, getScale, pushVersion, image) {
+export function addImage(size, getFabric, getScale, pushVersion, image) {
     beforeAdding(getFabric);
 
-    fabric.KImage.fromURL(image.largeImage, async image => {
+    fabric.KImage.fromURL(image[size], async image => {
         const { height, width } = image.getBoundingRect(true);
         const scale = getScale();
         const cvWidth = getFabric().width / scale;
@@ -42,7 +42,6 @@ export function setBackgroundImageConform(getFabric, pushVersion, setDimensions,
 }
 
 export function setBackgroundImageStretch(getFabric, getScale, pushVersion, image) {
-    console.log('setBackgroundImageStretch is happening');
     beforeAdding(getFabric);
 
     fabric.KImage.fromURL(image.largeImage, image => {
@@ -51,24 +50,14 @@ export function setBackgroundImageStretch(getFabric, getScale, pushVersion, imag
         const cvHeight = getFabric().height / getScale();
 
         // default is to scale by width:
-        let scale = cvWidth / width;
-        let left = 0;
-        let top = (cvHeight - (height * scale)) / 2;
-        
-        if (cvWidth / width > cvHeight / height) {
-            // If the difference between the width and the canvas width 
-            //  is greater than the difference between height and canvas height,
-            //  scale by height
-            scale = cvHeight / height;
-            left = (cvWidth - (width * scale)) / 2;
-            top = 0;
-        }
+        let scaleX = cvWidth / width;
+        let scaleY = cvHeight / height;
 
         const options = {
-            left,
-            top,
-            scaleX: scale,
-            scaleY: scale
+            left: 0,
+            top: 0,
+            scaleX,
+            scaleY
         };
 
         getFabric().setBackgroundImage(image, () => {
@@ -80,7 +69,6 @@ export function setBackgroundImageStretch(getFabric, getScale, pushVersion, imag
 }
 
 export function setBackgroundImageFill(getFabric, getScale, pushVersion, image) {
-    console.log('setBackgroundImageFill is happening');
     beforeAdding(getFabric);
 
     fabric.KImage.fromURL(image.largeImage, image => {
@@ -88,12 +76,11 @@ export function setBackgroundImageFill(getFabric, getScale, pushVersion, image) 
         const cvWidth = getFabric().width / getScale();
         const cvHeight = getFabric().height / getScale();
 
-        // default is to scale by width:
         let scale = cvWidth / width;
         let left = 0;
         let top = (cvHeight - (height * scale)) / 2;
         
-        if (cvWidth / width > cvHeight / height) {
+        if (cvWidth / width < cvHeight / height) {
             // If the difference between the width and the canvas width 
             //  is greater than the difference between height and canvas height,
             //  scale by height
