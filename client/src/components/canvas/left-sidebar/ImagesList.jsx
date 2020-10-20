@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import Icon from '@mdi/react';
+import { mdiImageSearchOutline  } from '@mdi/js';
+
 import API from '../../../api';
 import Modal from '../../elements/Modal';
 
@@ -15,8 +18,10 @@ import { SidebarSection } from '../styles';
 
 const ImagesList = ({ getFabric, getScale, pushVersion, setDimensions }) => {
     const [images, setImages] = useState(null);
+    const [imagesCopy, setImagesCopy] = useState(null);
     const [selected, setSelected] = useState(null);
     const [show, setShow] = useState(false);
+    const [search, setSearch] = useState('');
 
     useEffect(() => {
         async function fetchImages() {
@@ -25,6 +30,23 @@ const ImagesList = ({ getFabric, getScale, pushVersion, setDimensions }) => {
         }
         fetchImages();
     }, []);
+
+    function handleInputChange(e) {
+        const { value } = e.target;
+        setSearch(value);
+    }
+
+    async function find(e) {
+        e.preventDefault();
+        setImagesCopy(images);
+        const response = await API.image.get({ normalizedName: search.toLowerCase() });
+        setImages(response.data);
+    }
+
+    function clearSearch() {
+        setSearch('');
+        if (imagesCopy) setImages(imagesCopy);
+    }
 
     function closeModal() {
         setShow(false);
@@ -86,7 +108,16 @@ const ImagesList = ({ getFabric, getScale, pushVersion, setDimensions }) => {
                 content={content}
             />
 
-            <h3>Images</h3>
+            <h3>Image Favorites</h3>
+
+            <Form onSubmit={find}>
+                <input type="text" name="search" value={search} placeholder="search by name" onChange={handleInputChange} />
+                <button onClick={find} title="go">
+                    <Icon path={mdiImageSearchOutline} size={1.3} />
+                </button>
+                {search.length ? <p onClick={clearSearch} title="clear search">&times;</p> : null}
+            </Form>
+            
             {images && images.map((image, i) => {
                 return (
                     <ImageContainer key={i}>
@@ -120,17 +151,53 @@ export const ImageContainer = styled.div`
     }
 `;
 
+const Form = styled.form`
+    margin: 15px 0 10px 0;
+    position: relative;
+    height: 50px;
+    width: 100%;
+
+    input {
+        background-color: transparent;
+        border: none;
+        border-bottom: 1px solid #ddd;
+        color: white;
+        font-size: 16px;
+        outline: none;
+        position: absolute;
+        left: 10%;
+        right: 0;
+        padding: 6px 12px 8px 6px;
+        width: 70%;
+    }
+    button {
+        border: none;
+        background-color: transparent;
+        color: #ddd;
+        cursor: pointer;
+        outline: none;
+        position: absolute;
+        top: 0;
+        right: 45px;
+    }
+    p {
+        cursor: pointer;
+        font-size: 18px;
+        position: absolute;
+        top: 0;
+        right: 35px;
+    }
+`;
+
 const ContentContainer = styled.div`
     width: 300px;
 
     p {
         text-align: center;
     }
-
     p:last-of-type {
         margin-top: 25px;
     }
-
     div {
         display: flex;
         flex-wrap: wrap;
@@ -149,7 +216,6 @@ const ContentContainer = styled.div`
             transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
             width: 28%;
         }
-
         button:nth-child(4) {
             width: 100%;
         }
