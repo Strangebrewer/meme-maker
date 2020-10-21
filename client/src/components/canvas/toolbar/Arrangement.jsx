@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Icon from '@mdi/react';
-import Popup, { PopupContent, PopupButton } from '../../elements/Popup';
 import {
     mdiArrowCollapseDown,
     mdiArrowCollapseUp,
@@ -10,6 +9,8 @@ import {
     mdiUngroup,
 } from '@mdi/js';
 
+import { group, ungroup } from '../fabric-handlers/group';
+import Popup, { PopupContent, PopupButton } from '../../elements/Popup';
 import { ToolbarButton } from '../styles';
 
 function ArrangementToolbar({ getFabric, selected, pushVersion }) {
@@ -25,21 +26,12 @@ function ArrangementToolbar({ getFabric, selected, pushVersion }) {
         setContent(null);
     } 
 
-    function group() {
-        const group = selected.toGroup();
-        getFabric().discardActiveObject();
-        setTimeout(() => getFabric().setActiveObject(group).requestRenderAll());
-        pushVersion();
+    function toGroup() {
+        group(getFabric, selected, pushVersion);
     }
 
-    function ungroup() {
-        const objects = selected.getObjects();
-        selected.ungroupOnCanvas();
-        getFabric().remove(selected);
-        objects.forEach(o => getFabric().add(o));
-        getFabric().setActiveObject(objects[0])
-        setTimeout(() => getFabric().discardActiveObject().requestRenderAll());
-        pushVersion();
+    function poopGroup() {
+        ungroup(getFabric, selected, pushVersion);
     }
 
     function groupDisabled() {
@@ -47,7 +39,7 @@ function ArrangementToolbar({ getFabric, selected, pushVersion }) {
     }
 
     function ungroupDisabled() {
-        return !selected || selected.type !== 'group';
+        return !selected || selected.type !== 'k-group';
     }
 
     function bringForward() {
@@ -145,7 +137,7 @@ function ArrangementToolbar({ getFabric, selected, pushVersion }) {
             </ToolbarButton>
 
             <ToolbarButton
-                onClick={group}
+                onClick={toGroup}
                 disabled={groupDisabled()}
                 title="group"
             >
@@ -156,7 +148,7 @@ function ArrangementToolbar({ getFabric, selected, pushVersion }) {
             </ToolbarButton>
 
             <ToolbarButton
-                onClick={ungroup}
+                onClick={poopGroup}
                 disabled={ungroupDisabled()}
                 title="ungroup"
             >

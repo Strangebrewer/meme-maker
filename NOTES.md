@@ -1,8 +1,6 @@
 
 
-NEXT: Make it so you can use the alignment buttons on groups.
-
-Add ability to upload an svg.
+NEXT: Figure out how to make an upload SVG icon button trigger a click on a hidden input (it uses $refs in Vue).
 
 Add ability to upload svgs to the images page and save them to the DB for re-use (like images)
 

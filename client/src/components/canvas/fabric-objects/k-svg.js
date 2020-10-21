@@ -2,8 +2,8 @@ import Helper from './helper';
 import { fabric } from 'fabric';
 import { v4 as uuidv4 } from 'uuid';
 
-fabric.KGroup = fabric.util.createClass(fabric.Group, {
-    type: 'k-group',
+fabric.KSvg = fabric.util.createClass(fabric.Group, {
+    type: 'k-svg',
 
     initialize: function (objects, options = {}) {
         this.setControlsVisibility({
@@ -35,14 +35,14 @@ fabric.KGroup = fabric.util.createClass(fabric.Group, {
     }
 });
 
-fabric.KGroup.async = true;
-fabric.KGroup.fromObject = function (object, callback) {
+fabric.KSvg.async = true;
+fabric.KSvg.fromObject = function (object, callback) {
     fabric.util.enlivenObjects(object.objects, function (enlivenedObjects) {
         fabric.util.enlivenObjects([object.clipPath], function (enlivedClipPath) {
             const options = fabric.util.object.clone(object, true);
             options.clipPath = enlivedClipPath[0];
             delete options.objects;
-            callback && callback(new fabric.KGroup(enlivenedObjects, options, true));
+            callback && callback(new fabric.KSvg(enlivenedObjects, options, true));
         });
     });
 };

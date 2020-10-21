@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 import ArrangementToolbar from './Arrangement';
 import ShapesToolbar from './Shapes';
+import SvgToolbar from './Svg';
 import TextToolbar from './Text';
 import UndoRedoToolbar from './UndoRedo';
 
@@ -24,6 +25,7 @@ const Toolbar = (props) => {
             <TextToolbar getFabric={getFabric} pushVersion={pushVersion} />
             <ArrangementToolbar getFabric={getFabric} selected={selected} pushVersion={pushVersion} />
             <UndoRedoToolbar undo={undo} redo={redo} />
+            <SvgToolbar getFabric={getFabric} pushVersion={pushVersion} />
             <Buttons>
                 <button onClick={save}>Save</button>
                 <button onClick={cancel}>Cancel</button>

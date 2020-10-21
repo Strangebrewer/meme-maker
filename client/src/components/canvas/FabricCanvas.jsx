@@ -14,6 +14,7 @@ import './fabric-objects/k-group';
 import './fabric-objects/k-image';
 import './fabric-objects/k-path';
 import './fabric-objects/k-rect';
+import './fabric-objects/k-svg';
 import './fabric-objects/k-text';
 import './fabric-objects/k-triangle';
 import './fabric-objects/k-video';
