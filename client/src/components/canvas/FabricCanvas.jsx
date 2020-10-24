@@ -8,6 +8,7 @@ import RightSidebar from './right-sidebar/RightSidebar';
 import Toolbar from './toolbar/Toolbar';
 
 import { registerEvents } from './fabric-handlers/helper';
+import { generateThumbnail } from './fabric-actions/persistence';
 
 import './fabric-objects/k-circle';
 import './fabric-objects/k-group';
@@ -71,35 +72,7 @@ const FabricCanvas = ({ templateId }) => {
 
     async function save() {
         const canvas = getFabric();
-        const base64 = canvas.toDataURL('png');
-        canvas.requestRenderAll();
-        const max = 256;
-        let scale = max / canvas.width;
-        if (canvas.width < canvas.height) {
-            scale = max / canvas.height;
-        }
-        const size = {
-            width: canvas.width * scale,
-            height: canvas.height * scale
-        }
-
-        const promise = new Promise(function(resolve) {
-            const img = document.createElement('img');
-
-            img.onload = function() {
-                const newCanvas = document.createElement('canvas');
-                Object.assign(newCanvas, size);
-
-                newCanvas.getContext('2d').drawImage(this, 0, 0, size.width, size.height);
-                const base64Thumb = newCanvas.toDataURL('png');
-
-                resolve(base64Thumb);
-            }
-
-            img.src = base64;
-        });
-
-        const thumbnail = await promise;
+        const thumbnail = await generateThumbnail(canvas);
 
         const objects = canvas.getObjects();
         const bg = canvas.backgroundColor;
