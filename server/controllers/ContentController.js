@@ -56,7 +56,7 @@ export default {
 
     async destroy(req, res) {
         try {
-            const removed = await contentModel.delete(req.params.id);
+            const removed = await contentModel.destroy(req.params.id);
             res.json(removed);
         } catch (error) {
             res.status(400).json({ error: error.message });

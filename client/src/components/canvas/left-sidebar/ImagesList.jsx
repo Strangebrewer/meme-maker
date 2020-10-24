@@ -108,8 +108,6 @@ const ImagesList = ({ getFabric, getScale, pushVersion, setDimensions }) => {
                 content={content}
             />
 
-            <h3>Image Favorites</h3>
-
             <Form onSubmit={find}>
                 <input type="text" name="search" value={search} placeholder="search by name" onChange={handleInputChange} />
                 <button onClick={find} title="go">

@@ -34,7 +34,7 @@ const FabricCanvas = ({ templateId }) => {
     const [screenDimensions, setScreenDimensions] = useState({ width: 0, height: 0 });
 
     useEffect(() => {
-        const canvas = new fabric.Canvas('canvas', {
+        const canvas = new fabric.Canvas('the-canvas', {
             renderOnAddRemove: false,
             preserveObjectStacking: true,
             backgroundColor: '#222'
@@ -71,6 +71,36 @@ const FabricCanvas = ({ templateId }) => {
 
     async function save() {
         const canvas = getFabric();
+        const base64 = canvas.toDataURL('png');
+        canvas.requestRenderAll();
+        const max = 256;
+        let scale = max / canvas.width;
+        if (canvas.width < canvas.height) {
+            scale = max / canvas.height;
+        }
+        const size = {
+            width: canvas.width * scale,
+            height: canvas.height * scale
+        }
+
+        const promise = new Promise(function(resolve) {
+            const img = document.createElement('img');
+
+            img.onload = function() {
+                const newCanvas = document.createElement('canvas');
+                Object.assign(newCanvas, size);
+
+                newCanvas.getContext('2d').drawImage(this, 0, 0, size.width, size.height);
+                const base64Thumb = newCanvas.toDataURL('png');
+
+                resolve(base64Thumb);
+            }
+
+            img.src = base64;
+        });
+
+        const thumbnail = await promise;
+
         const objects = canvas.getObjects();
         const bg = canvas.backgroundColor;
         const bgImg = canvas.backgroundImage;
@@ -84,6 +114,7 @@ const FabricCanvas = ({ templateId }) => {
             backgroundColor: bg,
             backgroundImage: JSON.stringify(bgImg),
             name: current.name,
+            thumbnail,
             height,
             width,
             objects
@@ -215,7 +246,7 @@ const FabricCanvas = ({ templateId }) => {
                     redo={redo}
                 />
                 <CanvasWrapper width={dimensions.width} height={dimensions.height}>
-                    <canvas id="canvas"></canvas>
+                    <canvas id="the-canvas"></canvas>
                 </CanvasWrapper>
             </div>
             <RightSidebar
@@ -234,9 +265,9 @@ export default FabricCanvas;
 
 const CanvasPage = styled.div`
     display: flex;
-    position: relative;
     justify-content: space-between;
     min-height: calc(100vh - 92px);
+    position: relative;
 `;
 
 const CanvasWrapper = styled.div`

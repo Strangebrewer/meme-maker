@@ -2,9 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import API from '../api';
+import Icon from '@mdi/react';
+import { mdiTrashCanOutline } from '@mdi/js';
 
 import Header from '../components/elements/Header';
 import Modal from '../components/elements/Modal';
+
+import { PageWrapper } from './styles'; 
 
 const Content = props => {
     const history = useHistory();
@@ -43,12 +47,18 @@ const Content = props => {
         history.push(`/canvas/${id}`);
     }
 
+    async function deleteTemplate(item) {
+        await API.content.destroy(item._id);
+        const results = await API.content.get();
+        setTemplates(results.data);
+    }
+
     const inputs = [
         { label: 'Name' }
     ];
 
     return (
-        <div>
+        <PageWrapper>
             <Modal
                 show={show}
                 close={closeModal}
@@ -59,41 +69,116 @@ const Content = props => {
 
             <Header page="content" logout={props.logout} />
             <Wrapper>
-                <div style={{ width: '80px', height: '60px', borderRadius: '10px', margin: '10px', display: 'flex' }}>
-                    <button style={{ margin: 'auto' }} onClick={() => setShow(true)}>New Canvas</button>
+                <button onClick={() => setShow(true)}>New Canvas</button>
+
+                <div>
+                    {templates && templates.map(item => {
+                        return (
+                            <Card key={item._id} onDoubleClick={() => openTemplate(item._id)}>
+                                <h3>{item.name}</h3>
+                                <div>
+                                    <img src={item.thumbnail} crossOrigin="true" />
+                                </div>
+                                <Icon
+                                    size={1}
+                                    className="delete-icon"
+                                    color="#DF002D"
+                                    path={mdiTrashCanOutline}
+                                    onClick={() => deleteTemplate(item)}
+                                />
+                            </Card>
+                        )
+                    })}
                 </div>
-                {templates && templates.map(item => {
-                    return (
-                        <Card key={item._id} onDoubleClick={() => openTemplate(item._id)}>
-                            <h3>{item.name}</h3>
-                        </Card>
-                    )
-                })}
             </Wrapper>
-        </div>
+        </PageWrapper>
     );
 };
 
 export default Content;
 
 const Wrapper = styled.div`
-    background-color: #eaeaea;
-    min-height: calc(100vh - 92px);
-    display: flex;
-    flex: flex-wrap;
+    text-align: center;
+
+    > button {
+        background-color: white;
+        border: 2px solid ${props => props.theme.nRed};
+        border-radius: 5px;
+        box-shadow: 5px 5px 5px #222,
+            inset 1px 1px 5px ${props => props.theme.blue},
+            inset -1px -1px 5px ${props => props.theme.blue};
+        color: ${props => props.theme.purple};
+        cursor: pointer;
+        height: 40px;
+        outline: none;
+        width: 120px;
+        margin: 15px 0;
+    }
+
+    > div {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 1300px;
+        margin: auto;
+    }
 `;
 
 const Card = styled.div`
-    background-color: #fff;
-    border: 1px solid purple;
+    background: linear-gradient(to bottom right,
+        #000,
+        #4666FF,
+        #4666FF55,
+        #fff,
+        #fff,
+        #BC13FE55,
+        #BC13FE,
+        #fff
+    );
+    border-bottom: 2px solid ${props => props.theme.white};
+    border-right: 2px solid ${props => props.theme.white};
+    border-top: 2px solid ${props => props.theme.black};
+    border-left: 2px solid ${props => props.theme.black};
     border-radius: 10px;
-    box-shadow: 5px 5px 5px #666;
-    height: 200px;
+    border-bottom-left-radius: 15px;
+    border-top-right-radius: 12px;
+    box-shadow: inset 5px 5px 5px #333;
+    height: 240px;
     margin: 10px;
-    padding: 20px 30px;
-    width: 300px;
+    position: relative;
+    width: 240px;
+
     h3 {
         font-size: 24px;
         color: blue;
+        margin: 10px 0;
+        text-align: center;
+        text-shadow:0 0 1px #fff, 0 0 2px #fff, 0 0 3px #fff, 8px 8px 5px #111;
+    }
+
+    div {
+        width: 160px;
+        height: 160px;
+        margin: 0 auto;
+        display: flex;
+        background-color: #00000011;
+        /* border: 2px solid ${props => props.theme.black}; */
+        box-shadow: 10px 10px 10px #333;
+        
+        img {
+            max-width: 100%;
+            max-height: 100%;
+            align-self: center;
+            margin: auto;
+        }
+    }
+
+    .delete-icon {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 99;
+        cursor: pointer;
+        text-shadow: 5px 5px 5px #111;
     }
 `;

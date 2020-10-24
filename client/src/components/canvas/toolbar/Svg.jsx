@@ -1,14 +1,19 @@
-import React, { useState } from 'react';
+import React, { useRef } from 'react';
 import Icon from '@mdi/react';
 import {
-    mdiUndo,
-    mdiRedo,
+    mdiSvg
 } from '@mdi/js';
 
 import { addSvg } from '../fabric-handlers/svg';
 import { ToolbarButton } from '../styles';
 
 const Svg = ({ getFabric, pushVersion }) => {
+    const inputEl = useRef(null);
+
+    function triggerUpload() {
+        inputEl.current.click();
+    }
+
     function upload({ target }) {
         const { files } = target;
         const exists = (files && files[0]);
@@ -19,7 +24,9 @@ const Svg = ({ getFabric, pushVersion }) => {
             if (isSvg) {
                 try {
                     const reader = new FileReader();
-                    reader.onload = () => addSvg(reader.result, getFabric, pushVersion);
+                    reader.onload = () => {
+                        addSvg(reader.result, getFabric, pushVersion)
+                    };
                     reader.readAsText(files[0])
                 } catch (e) {
                     window.alert('Iono what happend. Try again.');
@@ -31,11 +38,23 @@ const Svg = ({ getFabric, pushVersion }) => {
     }
 
     return (
-        <input
-            type="file"
-            placeholder="upload svg"
-            onChange={upload}
-        />
+        <>
+            <input
+                ref={inputEl}
+                type="file"
+                placeholder="upload svg"
+                onChange={upload}
+                hidden
+            />
+
+            <ToolbarButton onClick={triggerUpload}>
+                <Icon
+                    path={mdiSvg}
+                    title="upload svg"
+                    size={1.2}
+                />
+            </ToolbarButton>
+        </>
     );
 }
 

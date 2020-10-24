@@ -6,6 +6,7 @@ export const Nightmode = {
     iconDisabled:'#595d60',
     
     black: '#000',
+    white: '#fff',
     blue: '#0000ff',
     red: '#ff0000',
     yellow: '#ffff00',

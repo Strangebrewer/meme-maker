@@ -39,12 +39,12 @@ const Login = props => {
                 onChange={handleInputChange}
                 placeholder="Enter your password"
             />
-            <Button5
+            <button
                 disabled={!username || !password}
                 onClick={enterSandman}
             >
                 Abandon all hope...
-         </Button5>
+            </button>
             <Error>{error}</Error>
         </Form>
     )
@@ -54,43 +54,35 @@ const Login = props => {
 export default Login;
 
 const Form = styled.form`
-   border-right: 1px solid ${props => props.theme.grey4};
-   height: 300px;
-   margin: auto 0;
-   padding: 20px 60px;
-   position: relative;
-   text-align: left;
-   transition: transform .3s, opacity .35s;
-   width: 360px;
-   h3 {
-      font-size: 36px;
-      margin-bottom: 10px;
-   }
-   input {
-      width: 100%;
-      padding: 3px 6px;
-      margin: 10px 0;
-   }
-`;
+    border-right: 2px solid ${props => props.theme.nPurple};
+    height: 340px;
+    margin: auto 0;
+    padding: 20px 60px;
+    position: relative;
+    text-align: left;
+    transition: transform .3s, opacity .35s;
+    width: 360px;
 
-const Button5 = styled.button`
-   background: ${props => props.theme.danger};
-   border: none;
-   color: black;
-   cursor: pointer;
-   margin: auto;
-   position: absolute;
-   bottom: 35px;
-   left: 0;
-   right: 0;
-   :active {
-      outline: none;
-      transform: translateY(2px);
-   }
+    h3 {
+        color: ${props => props.theme.nBlue};
+        font-size: 36px;
+        margin-bottom: 10px;
+    }
+    
+    input {
+        background-color: ${props => props.theme.nBlue}25;
+        border: 2px solid ${props => props.theme.nPurple};
+        border-radius: 5px;
+        box-shadow: inset 3px 3px 3px #666, inset -2px -2px 2px #fff;
+        margin: 10px 0;
+        outline: transparent;
+        padding: 8px 14px;
+        width: 100%;
+    }
 `;
 
 const Error = styled.div`
-   color: crimson;
-   font-size: 12px;
-   text-align: center;
+    color: crimson;
+    font-size: 12px;
+    text-align: center;
 `;

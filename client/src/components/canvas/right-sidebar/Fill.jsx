@@ -108,10 +108,22 @@ const Fill = ({ getFabric, selected, pushVersion }) => {
             gradient.type = 'radial';
             gradient.r1 = 0;
             gradient.r2 = ((width + height) / 2) / 2;
-            gradient.x1 = width / 2;
-            gradient.y1 = height / 2;
-            gradient.x2 = width / 2;
-            gradient.y2 = height / 2;
+
+            if (selected.type === 'k-triangle') {
+                const vectors = [{ x: width / 2, y: 0 }, { x: width, y: height }, { x: 0, y: height }];
+                const centerX = ((vectors[0].x + vectors[1].x + vectors[2].x) / 3);
+                const centerY = ((vectors[0].y + vectors[1].y + vectors[2].y) / 3);
+
+                gradient.x1 = centerX;
+                gradient.y1 = centerY;
+                gradient.x2 = centerX;
+                gradient.y2 = centerY;
+            } else {
+                gradient.x1 = width / 2;
+                gradient.y1 = height / 2;
+                gradient.x2 = width / 2;
+                gradient.y2 = height / 2;
+            }
         }
 
         return gradient;

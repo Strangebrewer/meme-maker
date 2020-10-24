@@ -1,14 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import Header from '../components/elements/Header';
-import API from '../api';
 import Icon from '@mdi/react';
-import { mdiHeart, mdiHeartOutline  } from '@mdi/js';
+import { mdiHeart, mdiHeartOutline, mdiTrashCanOutline } from '@mdi/js';
 
- 
+import Header from '../components/elements/Header';
+import UploadSVGButton from '../components/images/UploadSVGButton';
+import UploadImgButton from '../components/images/UploadImgButton';
+import API from '../api';
+
+import { PageWrapper } from './styles'; 
 
 const Images = props => {
     const [images, setImages] = useState(null);
+    const [svgs, setSvgs] = useState(null);
 
     useEffect(() => {
         async function fetchImages() {
@@ -18,93 +22,185 @@ const Images = props => {
         fetchImages();
     }, []);
 
-    async function uploadImage(event) {
-        const { files } = event.target;
-        if (!files[0].type.includes('image')) return;
-        const data = new FormData();
-        data.append('file', files[0]);
-        data.append('upload_preset', 'dragon-writer');
-        const url = `https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUD_NAME}/image/upload/`
-        const res = await fetch(url, {
-            method: 'POST',
-            body: data
-        });
-        const file = await res.json();
-        const updateObject = {
-            image: file.secure_url,
-            largeImage: file.eager[0].secure_url,
-            midImage: file.eager[1].secure_url,
-            thumbnail: file.eager[2].secure_url,
-            publicId: file.public_id,
-            name: 'hell yes'
+    useEffect(() => {
+        async function fetchSVGs() {
+            const results = await API.svg.get();
+            setSvgs(results.data);
         }
-        const image = await API.image.create(updateObject);
-        setImages([...images, image.data]);
+        fetchSVGs();
+    }, []);
+
+    async function toggleFavoriteImg(img) {
+        await API.image.edit({ ...img, favorite: !img.favorite });
+        const results = await API.image.get();
+        setImages(results.data);
     }
 
-    async function toggleFavorite(img) {
-        console.log('img:::', img);
-        const favorite = img.favorite ? false : true;
-        const image = await API.image.edit({ ...img, favorite: !img.favorite });
+    async function toggleFavoriteSvg(svg) {
+        await API.svg.edit({ ...svg, favorite: !svg.favorite });
+        const results = await API.svg.get();
+        setSvgs(results.data);
+    }
+
+    async function deleteSvg(svg) {
+        await API.svg.destroy(svg._id);
+        const results = await API.svg.get();
+        setSvgs(results.data);
+    }
+
+    async function deleteImage(img) {
+        await API.image.destroy(img._id);
         const results = await API.image.get();
         setImages(results.data);
     }
 
     return (
-        <div>
+        <PageWrapper>
             <Header page="Images" logout={props.logout} />
 
-            <input
-                type="file"
-                id="file"
-                name="file"
-                onChange={uploadImage}
-                placeholder="upload an image"
-            />
+            <Buttons>
+                <UploadImgButton setImages={img => setImages([...images, img])} />
+                <UploadSVGButton setSvgs={svg => setSvgs([...svgs, svg])} />
+            </Buttons>
 
-            <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                {images && images.map((image, i) => {
+            {images && <Content>
+                <h2 style={{ width: '100%' }}>Images</h2>
+                {images.map((image, i) => {
                     return (
-                        <ImageContainer>
+                        <Card key={image._id}>
                             <Icon
                                 size={1}
-                                color={image.favorite ? 'red' : 'white'}
+                                className="heart-icon"
+                                color={image.favorite ? 'red' : '#dedede'}
                                 path={image.favorite ? mdiHeart : mdiHeartOutline}
-                                onClick={() => toggleFavorite(image)}
+                                onClick={() => toggleFavoriteImg(image)}
                             />
-                            <img key={i} src={image.midImage} />
-                        </ImageContainer>
+                            <Icon
+                                size={1}
+                                className="delete-icon"
+                                color="orange"
+                                path={mdiTrashCanOutline}
+                                onClick={() => deleteImage(image)}
+                            />
+                            <img src={image.midImage} />
+                        </Card>
                     )
                 })}
-            </div>
-        </div>
+            </Content>}
+
+            {svgs && <Content>
+                <h2 style={{ width: '100%' }}>SVGs</h2>
+                {svgs.map((svg, i) => {
+                    return (
+                        <Card key={svg._id}>
+                            <Icon
+                                size={1}
+                                className="heart-icon"
+                                color={svg.favorite ? 'red' : '#dedede'}
+                                path={svg.favorite ? mdiHeart : mdiHeartOutline}
+                                onClick={() => toggleFavoriteSvg(svg)}
+                            />
+                            <Icon
+                                size={1}
+                                className="delete-icon"
+                                color="orange"
+                                path={mdiTrashCanOutline}
+                                onClick={() => deleteSvg(svg)}
+                            />
+                            <div dangerouslySetInnerHTML={{__html: svg.svg }}></div>
+                        </Card>
+                    )
+                })}
+            </Content>}
+        </PageWrapper>
     )
 }
 
 export default Images;
 
-export const ImageContainer = styled.div`
+const Buttons = styled.div`
+    text-align: center;
+    margin: 15px 0;
+
+    button {
+        background-color: white;
+        border: 2px solid ${props => props.theme.nRed};
+        border-radius: 5px;
+        box-shadow: 5px 5px 5px #222,
+            inset 1px 1px 5px ${props => props.theme.blue},
+            inset -1px -1px 5px ${props => props.theme.blue};
+        color: ${props => props.theme.purple};
+        cursor: pointer;
+        height: 40px;
+        outline: none;
+        width: 120px;
+    }
+
+    button:first-of-type {
+        margin-right: 20px;
+    }
+`;
+
+const Content = styled.div`
     display: flex;
-    height: 250px;
-    width: 250px;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 1100px;
+    margin: 35px auto 0 auto;
+
+    h2 {
+        font-size: 22px;
+        color: ${props => props.theme.nBlue};
+        text-align: center;
+        border-bottom: 1px solid ${props => props.theme.blue};
+        padding-bottom: 10px;
+        margin: 0 20px;
+    }
+`;
+
+export const Card = styled.div`
+    display: flex;
+    height: 180px;
+    width: 180px;
     position: relative;
-    background-color: #000;
-    margin: 5px;
+    background: linear-gradient(to bottom right, #000, #BC13FE, #BC13FE55, #fff, #fff, #4666FF55, #4666FF, #000);
+    margin: 20px;
     border: 1px solid ${props => props.theme.purple};
+    box-shadow: 10px 10px 10px #333;
 
     img {
         max-height: 100%;
         max-width: 100%;
         align-self: center;
         margin: auto;
+        padding: 10px;
     }
 
-    svg {
+    div {
+        height: 180px;
+        width: 180px;
+        align-self: center;
+        margin: auto;
+        padding: 10px;
+        
+        svg {
+            height: 100%;
+            width: 100%;
+        }
+    }
+
+    .heart-icon, .delete-icon {
         position: absolute;
-        top: 5px;
-        right: 5px;
+        top: 15px;
         z-index: 99;
         cursor: pointer;
     }
-`;
 
+    .heart-icon {
+        right: 15px;
+    }
+
+    .delete-icon {
+        left: 15px;
+    }
+`;

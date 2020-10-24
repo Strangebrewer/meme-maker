@@ -6,6 +6,7 @@ const ContentSchema = new Schema({
     backgroundImage: String,
     height: Number,
     width: Number,
+    thumbnail: String,
     name: String,
     normalizedName: String,
     objects: [{}],
