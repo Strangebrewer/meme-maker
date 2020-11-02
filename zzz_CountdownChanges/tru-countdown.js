@@ -6,13 +6,15 @@ import {
     differenceInDays,
     isBefore,
     isAfter,
-    addYears
+    addYears,
 } from 'date-fns'
 
 fabric.TruCountdown = fabric.util.createClass(fabric.Group, {
     type: 'tru-countdown',
-    itemWidth: 100,
+    itemWidth: 140,
     itemMargin: 10,
+    itemFontSize: 50,
+    itemTopMargin: 10,
 
     initialize: function (objects, options) {
         options = options || {};
@@ -57,14 +59,16 @@ fabric.TruCountdown = fabric.util.createClass(fabric.Group, {
     buildElement(x, key) {
         const defaults = {
             width: this.itemWidth,
-            fontSize: 16,
+            fontSize: 18,
             textAlign: 'center'
         };
 
+        const top = this.itemFontSize + this.itemTopMargin;
+
         const capitalized = key.charAt(0).toUpperCase() + key.slice(1);
 
-        const value = new fabric.TruText('', { ...defaults, fontSize: 40 });
-        const label = new fabric.TruText(capitalized, { ...defaults, top: 50 });
+        const value = new fabric.TruText('', { ...defaults, fontSize: this.itemFontSize });
+        const label = new fabric.TruText(capitalized, { ...defaults, top });
 
         const options = {
             top: 0,
@@ -93,7 +97,7 @@ fabric.TruCountdown = fabric.util.createClass(fabric.Group, {
 
         for (let i = 0; i < objects.length; i++) {
             const obj = objects[i];
-            const subObjects = obj.getObjects();
+            const itemObjects = obj.getObjects();
             let text = '0';
 
             if (!completed) {
@@ -103,7 +107,7 @@ fabric.TruCountdown = fabric.util.createClass(fabric.Group, {
                 if (obj.subType === 'countdown-seconds') text = interval.seconds.toString();
             }
 
-            subObjects[0].set({ text });
+            itemObjects[0].set({ text });
         }
     },
 
@@ -127,7 +131,7 @@ fabric.TruCountdown = fabric.util.createClass(fabric.Group, {
                     days: true,
                     hours: true,
                     minutes: true,
-                    seconds: true
+                    seconds: change.seconds
                 }
             }
         }
@@ -170,7 +174,6 @@ fabric.TruCountdown = fabric.util.createClass(fabric.Group, {
     hasTag(value) {
         return [
             this.type,
-            "font",
             "position"].includes(value);
     },
 
