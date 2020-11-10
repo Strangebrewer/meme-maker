@@ -9,6 +9,10 @@ class ContentAPI extends BaseAPI {
     getCalendar(url) {
         return axios.get(`content/calendar?url=${url}`);
     }
+
+    getRender(slug) {
+        return axios.get(`content/render/${slug}`);
+    }
 }
 
 export default new ContentAPI();

@@ -7,6 +7,9 @@ fabric.KImage = fabric.util.createClass(fabric.Image, {
 
     initialize: function (element, options = {}) {
 
+        if (!options.uuid)
+            this.set({ uuid: null, svg: null, locked: false });
+
         this.set({locked: false, lockUniScaling: true });
         this.callSuper('initialize', element, options);
     },
@@ -24,10 +27,10 @@ fabric.KImage = fabric.util.createClass(fabric.Image, {
     toObject: function() {
         const svg = Helper.toSvg(this);
         const encodedSvg = btoa(svg);
-        const object = fabric.util.object.extend(this.callSuper('toObject', {
-            uuid: this.uuid || uuidv4(),
-            svg: encodedSvg
-        }));
+        const object = fabric.util.object.extend(this.callSuper('toObject'))
+        object.uuid = this.uuid || uuidv4();
+        object.svg = encodedSvg;
+        
         return object;
     }
 });

@@ -8,6 +8,7 @@ fabric.KRect = fabric.util.createClass(fabric.Rect, {
     initialize: function (options = {}) {
         if (!options.uuid) {
             options = Helper.setDefaultProperties({ ...options, fill: 'rgba(0,0,255,1)' });
+            this.set(options);
         }
 
         this.callSuper('initialize', options);
@@ -29,10 +30,10 @@ fabric.KRect = fabric.util.createClass(fabric.Rect, {
     toObject: function () {
         const svg = Helper.toSvg(this);
         const encodedSvg = btoa(svg);
-        const object = fabric.util.object.extend(this.callSuper('toObject'), {
-            uuid: this.uuid || uuidv4(),
-            svg: encodedSvg
-        });
+        const object = fabric.util.object.extend(this.callSuper('toObject'))
+        object.uuid = this.uuid || uuidv4();
+        object.svg = encodedSvg;
+        
         const dimensions = { width: null, height: null, top: null, left: null };
         return { ...dimensions, ...object }
     }

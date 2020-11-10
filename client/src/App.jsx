@@ -8,6 +8,7 @@ import { GlobalStyle } from "./styles/GlobalStyle";
 import Authentication from './utils/Authentication';
 import Canvas from './pages/Canvas';
 import Content from './pages/Content';
+import Derp from './pages/Derp';
 import Home from './pages/Home';
 import Authoritaw from './pages/Authoritaw';
 import Spinner from './components/elements/Spinner';
@@ -101,6 +102,11 @@ const App = () => {
                         <Route
                             path="/canvas/:id"
                             component={Authentication(Canvas, { authenticated: user, required: true, logout })}
+                        />
+
+                        <Route
+                            path="/derp/:name"
+                            component={Authentication(Derp, { authenticated: user, required: true, logout })}
                         />
                     </Switch>
                 </Router>

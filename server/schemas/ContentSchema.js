@@ -8,6 +8,7 @@ const ContentSchema = new Schema({
     width: Number,
     thumbnail: String,
     name: String,
+    slug: String,
     normalizedName: String,
     objects: [{}],
     organization: { type: Schema.Types.ObjectId, ref: 'Organization' },

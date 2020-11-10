@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const OrganizationSchema = new Schema({
    name: String,
    normalizedName: String,
+   slug: String,
    users: [{ type: Schema.Types.ObjectId, ref: 'User' }]
 }, { timestamps: true });
 

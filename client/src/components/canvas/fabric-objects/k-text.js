@@ -12,6 +12,7 @@ fabric.KText = fabric.util.createClass(fabric.Textbox, {
                 backgroundColor: 'transparent',
                 fontSize: 50
             });
+            this.set(options);
         }
 
         this.set('locked', false);
@@ -35,10 +36,11 @@ fabric.KText = fabric.util.createClass(fabric.Textbox, {
     toObject: function () {
         const svg = Helper.toSvg(this);
         const encodedSvg = btoa(svg);
-        return fabric.util.object.extend(this.callSuper('toObject', {
-            uuid: this.uuid || uuidv4(),
-            svg : encodedSvg,
-        }));
+        const object = fabric.util.object.extend(this.callSuper('toObject'))
+        object.uuid = this.uuid || uuidv4();
+        object.svg = encodedSvg;
+
+        return object;
     }
 });
 

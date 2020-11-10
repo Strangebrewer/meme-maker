@@ -10,6 +10,9 @@ router.route('/')
 router.route('/calendar')
     .get(isAuthenticated, ContentController.getCalendar);
 
+router.route('/render/:slug')
+    .get(isAuthenticated, ContentController.getRender);
+
 router.route('/:id')
     .get(isAuthenticated, ContentController.getOne)
     .put(isAuthenticated, ContentController.put)

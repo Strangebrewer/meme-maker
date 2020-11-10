@@ -1,3 +1,4 @@
+import slugify from 'slugify';
 
 export default class BaseModel {
     constructor(model) {
@@ -22,6 +23,10 @@ export default class BaseModel {
         return found;
     }
 
+    async findOne(query = {}, fields = null, options = {}) {
+        return await this.Schema.findOne(query, fields, options);
+    }
+
     async getCount() {
         const count = await this.Schema.countDocuments();
         return count;
@@ -29,14 +34,16 @@ export default class BaseModel {
 
     async create(data, orgId) {
         if (orgId) data.organization = orgId;
+        data.slug = slugify(data.name, { lower: true });
 
-        const created = await this.Schema.create(data);        
+        const created = await this.Schema.create(data);
         return created;
     }
 
     async updateOne(_id, data, options) {
         options = { ...options, new: true };
-        const updated = await this. Schema.findOneAndUpdate({ _id }, data, options);
+        if (data.name) data.slug = slugify(data.name, { lower: true });
+        const updated = await this.Schema.findOneAndUpdate({ _id }, data, options);
         return updated;
     }
 

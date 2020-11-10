@@ -18,6 +18,24 @@ export default {
         })
     },
 
+    async getRender(req, res) {
+        try {
+            const { slug } = req.params;
+            const template = await contentModel.findOne({ slug });
+
+            const html = contentModel.render(template);
+
+            res.send({
+                render: html,
+                height: template.height,
+                width: template.width,
+            });
+
+        } catch (error) {
+            res.status(400).json({ error: error.message });
+        }
+    },
+
     async get(req, res) {
         try {
             const items = await contentModel.find({ organization: req.org });

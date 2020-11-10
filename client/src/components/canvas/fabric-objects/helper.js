@@ -7,7 +7,8 @@ export default {
 
     setDefaultProperties(options) {
         const properties = {
-            uuid: uuidv4()
+            uuid: uuidv4(),
+            svg: null
         };
 
         return Object.assign(options, properties);

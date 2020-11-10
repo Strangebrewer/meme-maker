@@ -12,6 +12,9 @@ fabric.KVideo = fabric.util.createClass(fabric.Image, {
             ml : false,
             mr : false,
         });
+        
+        if (!options.uuid)
+            this.set({ uuid: null, locked: false });
 
         this.callSuper('initialize', element, options);
     },
@@ -27,14 +30,14 @@ fabric.KVideo = fabric.util.createClass(fabric.Image, {
     },
 
     toObject: function() {
-        const object = fabric.util.object.extend(this.callSuper('toObject', {
-            uuid: this.uuid || uuidv4(),
-            video_url: this.video_url,
-            poster : this.poster,
-            autoplay : this.autoplay,
-            loop : this.loop,
-            muted : this.muted,
-        }));
+        const object = fabric.util.object.extend(this.callSuper('toObject'));
+        object.uuid = this.uuid || uuidv4();
+        object.video_url = this.video_url;
+        object.poster = this.poster;
+        object.autoplay = this.autoplay;
+        object.loop = this.loop;
+        object.muted = this.muted;
+        
         return object;
     }
 });

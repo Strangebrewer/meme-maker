@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
+import slugify from 'slugify';
 import API from '../api';
 import Icon from '@mdi/react';
-import { mdiTrashCanOutline } from '@mdi/js';
+import { mdiTrashCanOutline, mdiCircleExpand } from '@mdi/js';
 
 import Header from '../components/elements/Header';
 import Modal from '../components/elements/Modal';
@@ -47,6 +48,11 @@ const Content = props => {
         history.push(`/canvas/${id}`);
     }
 
+    function goDerpYourself(name) {
+        name = slugify(name, { lower: true });
+        history.push(`/derp/${name}`);
+    }
+
     async function deleteTemplate(item) {
         await API.content.destroy(item._id);
         const results = await API.content.get();
@@ -85,6 +91,14 @@ const Content = props => {
                                     color="#DF002D"
                                     path={mdiTrashCanOutline}
                                     onClick={() => deleteTemplate(item)}
+                                />
+
+                                <Icon
+                                    size={1}
+                                    className="render-icon"
+                                    color="#39FF14"
+                                    path={mdiCircleExpand}
+                                    onClick={() => goDerpYourself(item.name)}
                                 />
                             </Card>
                         )
@@ -177,6 +191,15 @@ const Card = styled.div`
         position: absolute;
         top: 10px;
         right: 10px;
+        z-index: 99;
+        cursor: pointer;
+        text-shadow: 5px 5px 5px #111;
+    }
+
+    .render-icon {
+        position: absolute;
+        top: 10px;
+        left: 10px;
         z-index: 99;
         cursor: pointer;
         text-shadow: 5px 5px 5px #111;

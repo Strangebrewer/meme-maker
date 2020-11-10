@@ -19,7 +19,7 @@ const Spinner = () => {
 export default Spinner;
 
 const LoadingContainer = styled.div`
-    background-color: #ddd;
+    background-color: #00000055;
     display: flex;
     justify-content: center;
     align-items: center;

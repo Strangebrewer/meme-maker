@@ -6,6 +6,7 @@ const SVGSchema = new Schema({
     favorite: Boolean,
     name: String,
     normalizedName: String,
+    slug: String,
     organization: { type: Schema.Types.ObjectId, ref: 'Organization' },
 }, { timestamps: true });
 

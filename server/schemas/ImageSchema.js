@@ -9,6 +9,7 @@ const ImageSchema = new Schema({
     thumbnail: String,
     publicId: String,
     name: String,
+    slug: String,
     normalizedName: String,
     organization: { type: Schema.Types.ObjectId, ref: 'Organization' },
 }, { timestamps: true });
