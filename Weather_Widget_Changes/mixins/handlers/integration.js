@@ -53,8 +53,7 @@ export default {
             const widgetWidth = 1165;
             const widgetHeight = 400;
             const padding = 30;
-            let top = padding;
-
+            
             const background = new fabric.TruRect({
                 width: widgetWidth -1,
                 height: widgetHeight - 1,
@@ -75,6 +74,7 @@ export default {
             });
             objects.push(background);
 
+            let top = padding;
             const title = new fabric.TruText('7-Day Forecast', {
                 width: widgetWidth -1,
                 fontSize: 50,
@@ -83,10 +83,9 @@ export default {
                 top
             });
             objects.push(title);
-            top += 60;
             
             const locationText = `${city}, ${state}`;
-
+            top += 60;
             const location = new fabric.TruText(locationText, {
                 width: widgetWidth -1,
                 fontSize: 26,
@@ -95,16 +94,17 @@ export default {
                 top,
             });
             objects.push(location);
-            top += 45;
 
             // create the day weather groups
-            let x = padding;
+            let left = padding;
+            top += 45;
             for (let i = 0; i < forecast.length; i++) {
                 const fc = forecast[i];
                 const items = [];
                 const groupWidth = 150;
                 const margin = 10;
 
+                let itemTop = 0;
                 const promise = new Promise((resolve) => {
                     fabric.TruImage.fromURL(fc.iconLink, async image => {
                         image.set({
@@ -112,7 +112,7 @@ export default {
                             width: 100,
                             height: 100,
                             left: 25,
-                            top: 0
+                            top: itemTop
                         });
                         resolve(image);
                     });
@@ -122,47 +122,49 @@ export default {
 
                 const hi = parseFloat(fc.highTemperature).toFixed(0);
                 const hiText = `H:  ${hi}\u00B0F`;
+                itemTop += 115;
                 const high = new fabric.TruText(hiText, {
                     width: groupWidth - 1,
                     fontSize: 22,
                     textAlign: 'center',
                     fill: '#ffff00',
-                    top: 115
+                    top: itemTop
                 });
                 items.push(high);
 
                 const lo = parseFloat(fc.lowTemperature).toFixed(0);
                 const loText = `L:  ${lo}\u00B0F`;
+                itemTop += 30;
                 const low = new fabric.TruText(loText, {
                     width: groupWidth - 1,
                     fontSize: 22,
                     textAlign: 'center',
                     fill: '#ffff00',
-                    top: 145
+                    top: itemTop
                 });
                 items.push(low);
 
                 const dayText = fc.weekday.substr(0, 3);
+                itemTop += 35;
                 const day = new fabric.TruText(dayText, {
                     width: groupWidth - 1,
                     height: 48,
                     fontSize: 38,
                     textAlign: 'center',
                     fill: '#fff',
-                    top: 180
+                    top: itemTop
                 });
                 items.push(day);
 
                 const options = {
                     top,
-                    left: x,
+                    left,
                     subType: 'weather-day'
                 };
                 const group = new fabric.TruGroup(items, options);
-                console.log('group.height:::', group.height);
                 objects.push(group);
 
-                x += groupWidth + margin;
+                left += groupWidth + margin;
             }
 
             const config = {

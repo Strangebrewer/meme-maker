@@ -41,9 +41,8 @@ fabric.TruWeather = fabric.util.createClass(fabric.Group, {
         let objects = this.getObjects();
 
         const { data } = await api.integration.weather({ zipcode, metric: this.config.metric });
-
-        const { city, state } = data.dailyForecasts.forecastLocation;
-        const { forecast } = data.dailyForecasts.forecastLocation;
+        
+        const { city, state, forecast } = data.dailyForecasts.forecastLocation;
         const locationText = `${city}, ${state}`;
         const deg = this.config.metric ? 'C' : 'F';
 
@@ -121,13 +120,11 @@ fabric.TruWeather = fabric.util.createClass(fabric.Group, {
             const fc = forecast[i];
 
             // replace high text
-            const hi = parseFloat(fc.highTemperature).toFixed(0);
-            const hiText = `H:  ${hi}\u00B0${deg}`;
+            const hiText = `H:  ${parseFloat(fc.highTemperature).toFixed(0)}\u00B0${deg}`;
             subObjects[1].set({ text: hiText });
 
             // replace low text
-            const lo = parseFloat(fc.lowTemperature).toFixed(0);
-            const loText = `L:  ${lo}\u00B0${deg}`;
+            const loText = `L:  ${parseFloat(fc.lowTemperature).toFixed(0)}\u00B0${deg}`;
             subObjects[2].set({ text: loText });
         }
 
