@@ -23,7 +23,7 @@ export default {
             const { slug } = req.params;
             const template = await contentModel.findOne({ slug });
 
-            const html = contentModel.render(template);
+            const { html } = await contentModel.render(slug);
 
             res.send({
                 render: html,
@@ -65,7 +65,7 @@ export default {
 
     async put(req, res) {
         try {
-            const updated = await contentModel.updateOne(req.params.id, req.body);
+            const updated = await contentModel.updateContent(req.params.id, req.body);
             res.json(updated);
         } catch (error) {
             res.status(400).json({ error: error.message });

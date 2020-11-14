@@ -23,6 +23,8 @@ const Derp = props => {
     async function fetchRender() {
         const { name } = props.match.params;
         const { data } = await API.content.getRender(name);
+        const decoded = decodeUtf8(data.render);
+        data.render = decoded;
         setHtml(data);
         setTimeout(() => setLoading(false), 1000);
     }
@@ -30,6 +32,54 @@ const Derp = props => {
     function goBackNomsayn() {
         history.push('/canvas');
     }
+
+    function decodeUtf8(item) {
+        return decodeURIComponent(escape(item));
+    }
+
+    function calcDimenionsAndShit() {
+        console.log('html.width:::', html.width);
+        console.log('html.height:::', html.height);
+        const actualWidth = 960;
+        const actualHeight = 540;
+        let xDiff = html.width - actualWidth;
+        let yDiff = html.height - actualHeight;
+        let scale = 1;
+
+        if (html.width > actualWidth && html.height > actualHeight) {
+            if (xDiff > yDiff)
+                scale = actualWidth / html.width;
+            else
+                scale = actualHeight / html.height;
+        } else if (html.width > actualWidth && html.height < actualHeight) {
+            scale = actualWidth / html.width;
+        } else if (html.width < actualWidth && html.height > actualHeight) {
+            scale = actualHeight / html.height;
+        }
+
+        
+        console.log('scale:::', scale);
+
+        const scaledWidth = html.width * scale;
+        const scaledHeight = html.height * scale;
+        const heightDiff = html.height - scaledHeight;
+        const widthDiff = html.width - scaledWidth;
+        console.log('heightDiff:::', heightDiff);
+        console.log('widthDiff:::', widthDiff);
+
+        const styles = {
+            width: html.width + 'px',
+            height: html.height + 'px',
+            transform: `scale(${scale})`,
+            position: 'absolute',
+            top: `-${heightDiff * scale}px`,
+            left:  `-${widthDiff * scale}px`,
+        }
+
+        return styles;
+    }
+
+    const styles = calcDimenionsAndShit();
 
     return (
         <PageWrapper>
@@ -46,9 +96,7 @@ const Derp = props => {
                             />
                         </BackButton>
 
-                        <RenderWrapper width={html.width} height={html.height}>
-                            <div dangerouslySetInnerHTML={{ __html: html.render }}></div>
-                        </RenderWrapper>
+                        <iframe srcDoc={html.render} style={styles} frameBorder="0"></iframe>
                     </>
                 )}
         </PageWrapper>
@@ -77,16 +125,5 @@ const BackButton = styled.button`
 
     &:hover {
         opacity: 1;
-    }
-`;
-
-const RenderWrapper = styled.div`
-    display: flex;
-    min-height: 100vh;
-
-    div {
-        width: ${props => props.width}px;
-        height: ${props => props.height}px;
-        margin: auto;
     }
 `;

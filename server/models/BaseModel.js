@@ -32,6 +32,14 @@ export default class BaseModel {
         return count;
     }
 
+    async save(item) {
+        if (item._id) {
+            return await this.updateOne(item._id, item);
+        } else {
+            return await this.create(item);
+        }
+    }
+
     async create(data, orgId) {
         if (orgId) data.organization = orgId;
         data.slug = slugify(data.name, { lower: true });

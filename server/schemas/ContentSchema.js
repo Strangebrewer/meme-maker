@@ -11,6 +11,7 @@ const ContentSchema = new Schema({
     slug: String,
     normalizedName: String,
     objects: [{}],
+    render: { type: Schema.Types.ObjectId, ref: 'Render' },
     organization: { type: Schema.Types.ObjectId, ref: 'Organization' },
 }, { timestamps: true });
 
