@@ -1,0 +1,65 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .countdown-container {
+            position: absolute;
+            width: 600px;
+            background-color: lightblue;
+            display: flex;
+            justify-content: space-between;
+        }
+        .countdown-days,
+        .countdown-hours,
+        .countdown-minutes,
+        .countdown-seconds {
+            width: 140px;
+        }
+        p {
+            text-align: center;
+        }
+        .number {
+            font-size: 34px;
+            height: 51px;
+            width: 140px;
+        }
+        .label {
+            margin-top: 10px;
+            font-size: 14px;
+            width: 140px;
+        }
+    </style>
+</head>
+<body>
+    <div
+        class="countdown-container"
+        data-date="2015-11-17T21:36:20.000Z"
+        data-direction="up"
+    >
+        <div class="countdown-days">
+            <p class="number"></p>
+            <p class="label">Days</p>
+        </div>
+
+        <div class="countdown-hours">
+            <p class="number"></p>
+            <p class="label">Hours</p>
+        </div>
+
+        <div class="countdown-minutes">
+            <p class="number"></p>
+            <p class="label">Minutes</p>
+        </div>
+
+        <div class="countdown-seconds">
+            <p class="number"></p>
+            <p class="label">Seconds</p>
+        </div>
+    </div>
+
+    <script src="./dateFunctions.js" type="text/javascript"></script>
+    <script src="./test.js" type="text/javascript"></script>
+</body>
+</html>

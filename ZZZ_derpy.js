@@ -9,6 +9,12 @@ var narf = document.getElementsByClassName('narf-text');
 //     'h:mm a'
 // ];
 
+console.log('window:::', window);
+
+var format = window.dateFns.format;
+
+console.log('format(new Date(), "HH:mm:ss a"):::', format(new Date(), "HH:mm:ss a"));
+
 tick();
 
 setInterval(function () {
