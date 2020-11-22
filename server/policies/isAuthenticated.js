@@ -8,7 +8,7 @@ export default function (req, res, next) {
             });
         } else {
             req.user = user;
-            req.org - user.organization;
+            req.org = user.organization;
             next();
         }
     })(req, res, next);

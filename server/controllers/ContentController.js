@@ -1,4 +1,5 @@
 import Content from '../models/ContentModel';
+import AwsStore from '../modules/aws/Store';
 const contentModel = new Content();
 import ical from 'ical';
 
@@ -23,10 +24,8 @@ export default {
             const { slug } = req.params;
             const template = await contentModel.findOne({ slug });
 
-            const { html } = await contentModel.render(slug);
-
             res.send({
-                render: html,
+                url: template.url,
                 height: template.height,
                 width: template.width,
             });
@@ -56,6 +55,7 @@ export default {
 
     async post(req, res) {
         try {
+            console.log('req.org:::', req.org)
             const item = await contentModel.create(req.body, req.org);
             res.json(item);
         } catch (error) {
@@ -65,6 +65,7 @@ export default {
 
     async put(req, res) {
         try {
+            req.body.organization = req.org;
             const updated = await contentModel.updateContent(req.params.id, req.body);
             res.json(updated);
         } catch (error) {

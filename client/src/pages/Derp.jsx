@@ -23,8 +23,6 @@ const Derp = props => {
     async function fetchRender() {
         const { name } = props.match.params;
         const { data } = await API.content.getRender(name);
-        const decoded = decodeUtf8(data.render);
-        data.render = decoded;
         setHtml(data);
         setTimeout(() => setLoading(false), 1000);
     }
@@ -33,13 +31,16 @@ const Derp = props => {
         history.push('/canvas');
     }
 
-    function decodeUtf8(item) {
-        return decodeURIComponent(escape(item));
-    }
+    /**
+     * keep this function (decodeUtf8) as a reference to encoding and decoding as Utf8 - corresponding backend code is:
+     *      return unescape(encodeURIComponent(html));
+     * The HTML passed in is "$.html()" constructed by cheerio
+     */     
+    // function decodeUtf8(item) {
+    //     return decodeURIComponent(escape(item));
+    // }
 
     function calcDimenionsAndShit() {
-        console.log('html.width:::', html.width);
-        console.log('html.height:::', html.height);
         const actualWidth = 960;
         const actualHeight = 540;
         let xDiff = html.width - actualWidth;
@@ -57,15 +58,10 @@ const Derp = props => {
             scale = actualHeight / html.height;
         }
 
-        
-        console.log('scale:::', scale);
-
         const scaledWidth = html.width * scale;
         const scaledHeight = html.height * scale;
         const heightDiff = html.height - scaledHeight;
         const widthDiff = html.width - scaledWidth;
-        console.log('heightDiff:::', heightDiff);
-        console.log('widthDiff:::', widthDiff);
 
         const styles = {
             width: html.width + 'px',
@@ -96,7 +92,9 @@ const Derp = props => {
                             />
                         </BackButton>
 
-                        <iframe srcDoc={html.render} style={styles} frameBorder="0"></iframe>
+                        {/* this iframe corresponds to the Utf8 encoded stuff commented out above */}
+                        {/* <iframe srcDoc={html.render} style={styles} frameBorder="0"></iframe> */}
+                        <iframe src={html.url} style={styles} frameBorder="0"></iframe>
                     </>
                 )}
         </PageWrapper>

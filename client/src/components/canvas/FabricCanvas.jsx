@@ -82,7 +82,10 @@ const FabricCanvas = ({ templateId }) => {
         }
         const { width, height } = screenDimensions;
 
+        console.log('current:::', current)
+
         const template = await API.content.edit({
+            organization: current.organization,
             _id: templateId,
             backgroundColor: bg,
             backgroundImage: JSON.stringify(bgImg),

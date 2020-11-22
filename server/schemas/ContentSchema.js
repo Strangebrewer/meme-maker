@@ -12,6 +12,7 @@ const ContentSchema = new Schema({
     normalizedName: String,
     objects: [{}],
     render: { type: Schema.Types.ObjectId, ref: 'Render' },
+    url: String,
     organization: { type: Schema.Types.ObjectId, ref: 'Organization' },
 }, { timestamps: true });
 
