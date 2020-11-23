@@ -10,7 +10,8 @@ fabric.KText = fabric.util.createClass(fabric.Textbox, {
             options = Helper.setDefaultProperties({
                 ...options,
                 backgroundColor: 'transparent',
-                fontSize: 50
+                fontSize: 50,
+                text
             });
             this.set(options);
         }
@@ -34,11 +35,11 @@ fabric.KText = fabric.util.createClass(fabric.Textbox, {
     },
 
     toObject: function () {
-        const svg = Helper.toSvg(this);
-        const encodedSvg = btoa(svg);
+        // const svg = Helper.toSvg(this);
+        // const encodedSvg = btoa(svg);
         const object = fabric.util.object.extend(this.callSuper('toObject'))
         object.uuid = this.uuid || uuidv4();
-        object.svg = encodedSvg;
+        // object.svg = encodedSvg;
 
         return object;
     }

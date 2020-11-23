@@ -28,12 +28,11 @@ fabric.KSvg = fabric.util.createClass(fabric.Group, {
     },
 
     toObject: function() {
-        const svg = Helper.toSvg(this);
-        const encodedSvg = btoa(svg);
-        console.log('encodedSvg in k-svg:::', encodedSvg)
+        // const svg = Helper.toSvg(this);
+        // const encodedSvg = btoa(svg);
         const object = fabric.util.object.extend(this.callSuper('toObject'))
         object.uuid = this.uuid || uuidv4();
-        object.svg = encodedSvg;;
+        // object.svg = encodedSvg;
 
         return object;
     }

@@ -1,5 +1,4 @@
 import Content from '../models/ContentModel';
-import AwsStore from '../modules/aws/Store';
 const contentModel = new Content();
 import ical from 'ical';
 

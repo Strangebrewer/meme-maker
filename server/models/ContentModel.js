@@ -29,37 +29,21 @@ export default class Content extends BaseModel {
 		
 		const $body = $('body');
 		$body.css({ margin: '0', padding: '0' });
-
 		$body.append(`<canvas id="canvas-${template._id}"></canvas>`);
 
-		// $body.append('<div class="wrapper"></div>');
-
-		// const $wrapper = $('.wrapper');
-		// $wrapper.css({
-		// 	width: `${template.width}px`,
-		// 	height: `${template.height}px`,
-		// 	'background-color': template.backgroundColor,
-		// 	position: 'relative',
-		// 	margin: '0',
-		// 	padding: '0'
-		// });
-
-		// for (let i = 0; i < template.objects.length; i++) {
-		// 	const element = template.objects[i];
-		// 	const svg = Buffer.from(element.svg, 'base64').toString();
-
-		// 	$wrapper.append(`<svg class="svg-${i}" width="100%" height="100%">${svg}</svg>`);
-		// 	$(`.svg-${i}`).css({
-		// 		position: 'absolute',
-		// 		top: '0',
-		// 		left: '0',
-		// 	});
-		// }
-
 		const { organization, _id } = template;
+		const rawData = await AwsStore.downloadJson(organization, _id);
+		let json = Buffer.from(rawData.Body, 'utf-8').toString();
+
+		// this (below) works just as well, but storing it on and downloading it from AWS (above)
+		// 	makes the file smaller. I don't know what they does, but whatever they does shrinks
+		//  the file size significantly - as much as 50% in some cases
+		// json = JSON.stringify(template);
 
 		$body.append(`<script src="${AwsStore.getAssetPath('fabric.min.js')}" type="text/javascript"></script>`);
+		$body.append(`<script src="${AwsStore.getAssetPath('addFabricObjects.js')}" type="text/javascript"></script>`);
 		$body.append(`<script src="${AwsStore.getAssetPath('dateFunctions.js')}" type="text/javascript"></script>`);
+		$body.append(`<script id="canvas-json" type="application/json">${json}</script>`);
 		$body.append(`<script src="${AwsStore.getAssetPath('test.js')}" type="text/javascript"></script>`);
 
 		let html = $.html();
@@ -77,9 +61,22 @@ export default class Content extends BaseModel {
 	async updateContent(_id, data, options) {
         options = { ...options, new: true };
 		if (data.name) data.slug = slugify(data.name, { lower: true });
+
+		const canvasData = {
+			_id: data._id,
+			organization: data.organization,
+			backgroundColor: data.backgroundColor,
+			backgroundImage: data.backgroundImage,
+			height: data.height,
+			width: data.width,
+			objects: data.objects,
+		};
+
+		const stringified = JSON.stringify(canvasData);
+		await AwsStore.put(data.organization, _id, stringified, 'canvas.json', { ContentType: 'application/json' });
 		
-		const html = this.buildHtml(data);		
-		await AwsStore.put(data.organization, _id, html, { content_type: 'text/html' });
+		const html = await this.buildHtml(data);		
+		await AwsStore.put(data.organization, _id, html, 'index.html', { ContentType: 'text/html' });
 
 		data.url = AwsStore.getItemUrl(data.organization, _id);		
 		return await this.Schema.findOneAndUpdate({ _id }, data, options);
