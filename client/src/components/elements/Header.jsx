@@ -17,7 +17,6 @@ const Header = props => {
             <LinkButton onClick={() => goTo('/')}>HOME</LinkButton>
             {user && <LinkButton onClick={() => goTo('/canvas')}>CANVAS</LinkButton>}
             {user && <LinkButton onClick={() => goTo('/images')}>IMAGES</LinkButton>}
-            {user && <LinkButton onClick={() => goTo('/derp/hi-there-buttface')}>DERP</LinkButton>}
             {user
                 ? <AuthBtn onClick={props.logout}>LOGOUT</AuthBtn>
                 : <AuthBtn width="150" onClick={() => goTo('/login')}>LOGIN / SIGNUP</AuthBtn>}

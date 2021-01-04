@@ -2,6 +2,7 @@
 
 NEXT:
 
+
 - See if you can use clip-path to make image backgrounds for objects. What I'm thinking is you'd have an object and you put an image behind it, sized to fit, and you make the object's fill transparent, and you group them together.
 
 - Build a treeview recursive component
@@ -11,3 +12,8 @@ NEXT:
 
 If this ever becomes public (or you make it your portfolio), make sure you limit the number of images any single account can have uploaded at a time. Don't want to fuck your Cloudinary account.
 
+
+
+DONE: 
+
+- Set up caching - started to setup Redis, but it was ultimately easier to just create a Cache collection

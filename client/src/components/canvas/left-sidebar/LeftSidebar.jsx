@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import ImagesList from './ImagesList';
 import SVGsList from './SVGsList';
+import WidgetList from './WidgetList';
 import styled from 'styled-components';
 
 import { SidebarWrapper } from '../styles';
@@ -22,7 +23,6 @@ const Sidebar = ({ getFabric, getScale, pushVersion, selected, setDimensions }) 
         <SidebarWrapper left>
             <div>
                 <Button
-                    first
                     value="images"
                     onClick={toggleList}
                     hightlight={list === 'images'}
@@ -36,6 +36,15 @@ const Sidebar = ({ getFabric, getScale, pushVersion, selected, setDimensions }) 
                     hightlight={list === 'svgs'}
                 >
                     SVGs
+                </Button>
+
+                <Button
+                    last
+                    value="widgets"
+                    onClick={toggleList}
+                    hightlight={list === 'widgets'}
+                >
+                    Widgets
                 </Button>
             </div>
 
@@ -56,6 +65,15 @@ const Sidebar = ({ getFabric, getScale, pushVersion, selected, setDimensions }) 
                     setDimensions={setDimensions}
                 />
             )}
+
+            {list === 'widgets' && (
+                <WidgetList
+                    getFabric={getFabric}
+                    getScale={getScale}
+                    pushVersion={pushVersion}
+                    setDimensions={setDimensions}
+                />
+            )}
         </SidebarWrapper>
     )
 }
@@ -65,10 +83,10 @@ export default Sidebar;
 const Button = styled.button`
     background: ${props => props.hightlight ? '#BC13FE20' : 'transparent'};
     color: white;
-    width: 50%;
+    width: 33%;
     height: 40px;
     border: none;
     border-bottom: 1px solid grey;
-    border-right: ${props => props.first ? '1px solid grey' : 'none'};
+    border-right: ${props => props.last ? 'none' : '1px solid grey'};
     outline: none;
 `;

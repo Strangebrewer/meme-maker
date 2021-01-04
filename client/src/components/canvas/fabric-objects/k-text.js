@@ -8,10 +8,10 @@ fabric.KText = fabric.util.createClass(fabric.Textbox, {
     initialize: function (text, options = {}) {
         if (!options.uuid) {
             options = Helper.setDefaultProperties({
-                ...options,
                 backgroundColor: 'transparent',
                 fontSize: 50,
-                text
+                text,
+                ...options,
             });
             this.set(options);
         }

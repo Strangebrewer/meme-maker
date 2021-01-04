@@ -20,6 +20,8 @@ import './fabric-objects/k-text';
 import './fabric-objects/k-triangle';
 import './fabric-objects/k-video';
 
+import './fabric-objects/widgets/weather';
+
 const instance = {
     canvas: null,
     selected: null,
