@@ -9,7 +9,6 @@ import Authentication from './utils/Authentication';
 import Canvas from './pages/Canvas';
 import Content from './pages/Content';
 import Derp from './pages/Derp';
-import Game from './pages/Game';
 import Home from './pages/Home';
 import Authoritaw from './pages/Authoritaw';
 import Spinner from './components/elements/Spinner';
@@ -98,12 +97,6 @@ const App = () => {
                             exact
                             path="/canvas"
                             component={Authentication(Content, { authenticated: user, required: true, logout })}
-                        />
-
-                        <Route
-                            exact
-                            path="/game"
-                            component={Authentication(Game, { authenticated: user, required: true, logout })}
                         />
 
                         <Route

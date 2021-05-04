@@ -19,7 +19,7 @@ function lastLetters(word) {
 
 // console.log('lastLetters("shizzleDawG"):::', lastLetters("shizzleDawG"));
 
-function sockMerchant(n, ar) {
+function sockMerchant(ar) {
     ar.sort();
     let pairs = 0;
     for (let i = 0; i < ar.length; i++) {
@@ -34,7 +34,7 @@ function sockMerchant(n, ar) {
 }
 
 // const socks = [2, 7, 2, 6, 5, 8, 12, 8, 2, 1, 15, 4, 4, 5, 2, 9, 7, 8, 1, 2, 6, 5];
-// const pairs = sockMerchant(socks.length, socks);
+// const pairs = sockMerchant(socks);
 // console.log('pairs:::', pairs);
 
 function countingValleys(steps, path) {
@@ -217,26 +217,26 @@ function takeUpTime(tree) {
 
 
 
-console.log('\n');
+// console.log('\n');
 
-console.time('timer-setup');
-console.log('takeUpTime:::', takeUpTime(sampleTree));
-console.timeEnd('timer-setup');
+// console.time('timer-setup');
+// console.log('takeUpTime:::', takeUpTime(sampleTree));
+// console.timeEnd('timer-setup');
 
-console.log('\n');
+// console.log('\n');
 
-console.time('timer-three');
-console.log('flattenObjectEqual - are they equal?:::', flattenObjectEqual(sampleTree));
-console.timeEnd('timer-three');
+// console.time('timer-three');
+// console.log('flattenObjectEqual - are they equal?:::', flattenObjectEqual(sampleTree));
+// console.timeEnd('timer-three');
 
-console.log('\n');
+// console.log('\n');
 
-console.time('timer-two');
-console.log('toArrayEqual - are they equal?:::', toArrayEqual(sampleTree));
-console.timeEnd('timer-two');
+// console.time('timer-two');
+// console.log('toArrayEqual - are they equal?:::', toArrayEqual(sampleTree));
+// console.timeEnd('timer-two');
 
-console.log('\n');
+// console.log('\n');
 
-console.time('timer');
-console.log('areAllLeavesEqual - are they equal?:::', areAllLeavesEqual(sampleTree));
-console.timeEnd('timer');
+// console.time('timer');
+// console.log('areAllLeavesEqual - are they equal?:::', areAllLeavesEqual(sampleTree));
+// console.timeEnd('timer');
