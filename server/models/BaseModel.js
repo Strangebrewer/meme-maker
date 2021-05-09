@@ -1,5 +1,3 @@
-import slugify from 'slugify';
-
 export default class BaseModel {
     constructor(model) {
         this.Schema = model;
@@ -42,17 +40,15 @@ export default class BaseModel {
 
     async create(data, orgId) {
         if (orgId) data.organization = orgId;
-        data.slug = slugify(data.name, { lower: true });
-
-        const created = await this.Schema.create(data);
-        return created;
+        
+        const created = new this.Schema(data);
+        return await created.save();
     }
 
-    async updateOne(_id, data, options) {
-        options = { ...options, new: true };
-        if (data.name) data.slug = slugify(data.name, { lower: true });
-        const updated = await this.Schema.findOneAndUpdate({ _id }, data, options);
-        return updated;
+    async updateOne(_id, data) {
+        const found = await this.Schema.findById(_id);
+        Object.assign(found, data);
+        return await found.save();
     }
 
     async destroy(_id) {

@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
+import slugify from 'slugify';
 
 const ContentSchema = new Schema({
     backgroundColor: { type: String, default: '#fff' },
@@ -18,8 +19,9 @@ const ContentSchema = new Schema({
 
 ContentSchema.pre('save', function (next) {
     this.normalizedName = this.name.toLowerCase();
+    this.slug = slugify(this.name, { lower: true });
     next();
-})
+});
 
 const Content = mongoose.model('Content', ContentSchema);
 

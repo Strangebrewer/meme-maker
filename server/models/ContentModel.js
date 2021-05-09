@@ -1,6 +1,5 @@
 import cheerio from 'cheerio';
 import minify from 'html-minifier';
-import slugify from 'slugify';
 import ContentSchema from '../schemas/ContentSchema';
 import AwsStore from '../modules/aws/Store';
 import BaseModel from './BaseModel';
@@ -20,13 +19,13 @@ export default class Content extends BaseModel {
 			xmlMode: false
 		});
 
-		const $head = $('head');		
+		const $head = $('head');
 		$head.append(`
 			<meta charset="utf-8" />
 			<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 			<meta name="viewport" content="width=1920" />
 		`);
-		
+
 		const $body = $('body');
 		$body.css({ margin: '0', padding: '0' });
 		$body.append(`<canvas id="canvas-${template._id}"></canvas>`);
@@ -59,8 +58,7 @@ export default class Content extends BaseModel {
 	}
 
 	async updateContent(_id, data, options) {
-        options = { ...options, new: true };
-		if (data.name) data.slug = slugify(data.name, { lower: true });
+		options = { ...options, new: true };
 
 		const canvasData = {
 			_id: data._id,
@@ -74,11 +72,13 @@ export default class Content extends BaseModel {
 
 		const stringified = JSON.stringify(canvasData);
 		await AwsStore.put(data.organization, _id, stringified, 'canvas.json', { ContentType: 'application/json' });
-		
-		const html = await this.buildHtml(data);		
+
+		const html = await this.buildHtml(data);
 		await AwsStore.put(data.organization, _id, html, 'index.html', { ContentType: 'text/html' });
 
-		data.url = AwsStore.getItemUrl(data.organization, _id);		
-		return await this.Schema.findOneAndUpdate({ _id }, data, options);
+		data.url = AwsStore.getItemUrl(data.organization, _id);
+		let found = await this.Schema.findById(_id);
+		Object.assign(found, data);
+		return await found.save();
 	}
 }

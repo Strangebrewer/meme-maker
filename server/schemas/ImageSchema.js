@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
+import slugify from 'slugify';
 
 const ImageSchema = new Schema({
     image: { type: String, required: true },
@@ -9,6 +10,7 @@ const ImageSchema = new Schema({
     thumbnail: String,
     publicId: String,
     name: String,
+    normalizedName: String,
     slug: String,
     normalizedName: String,
     organization: { type: Schema.Types.ObjectId, ref: 'Organization' },
@@ -16,6 +18,7 @@ const ImageSchema = new Schema({
 
 ImageSchema.pre('save', function (next) {
     this.normalizedName = this.name.toLowerCase();
+    this.slug = slugify(this.name, { lower: true });
     next();
 });
 

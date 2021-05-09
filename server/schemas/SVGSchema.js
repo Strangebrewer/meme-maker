@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
+import slugify from 'slugify';
 
 const SVGSchema = new Schema({
     svg: { type: String, required: true },
@@ -12,6 +13,7 @@ const SVGSchema = new Schema({
 
 SVGSchema.pre('save', function (next) {
     this.normalizedName = this.name.toLowerCase();
+    this.slug = slugify(this.name, { lower: true });
     next();
 });
 
