@@ -43,12 +43,18 @@ export default class BaseModel {
         
         const created = new this.Schema(data);
         return await created.save();
+        // const response = await this.Schema.findOneAndUpdate({}, data, { upsert: true, new: true });
+        // console.log('response in BaseModel create:::', response);
+        // return response;
     }
 
     async updateOne(_id, data) {
         const found = await this.Schema.findById(_id);
         Object.assign(found, data);
         return await found.save();
+        // const response = await this.Schema.findOneAndUpdate({ _id }, data, { new: true });
+        // console.log('response in BaseModel updateOne:::', response);
+        // return response;
     }
 
     async destroy(_id) {
