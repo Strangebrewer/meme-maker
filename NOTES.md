@@ -10,7 +10,7 @@ NEXT:
 - Do I need Redux? Might be better than re-fetching all the images, SVGs, and templates everytime I switch pages. I could just use useContext for that, right?
 
 
-If this ever becomes public (or you make it your portfolio), make sure you limit the number of images any single account can have uploaded at a time. Don't want to fuck your Cloudinary account.
+If this ever becomes public (or you make it your portfolio), make sure you limit the number of images any single account can have uploaded at a time. Don't want to flood your Cloudinary account.
 
 
 

@@ -35,7 +35,7 @@ const UploadSvgButton = ({ setSvgs }) => {
                     window.alert('Iono what happend. Try again.');
                 }
             } else {
-                window.alert('You have to upload a propa svg file, stupid!');
+                window.alert('You have to upload a propa svg file.');
             }
         }
     }

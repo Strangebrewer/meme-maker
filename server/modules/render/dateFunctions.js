@@ -1,5 +1,5 @@
-// this is a cribbed version of the date-fns functions we actually need
-// so we can have a much smaller total file size
+// this is a cribbed version of the date-fns functions I actually need for a clock widget
+// so I can have a much smaller total file size
 // I found a minified date-fns version 2.0.0 on cdnjs.com. It's ~70kB, AND it doesn't
 // include all the functions we're using on the front end (e.g. intervalToDuration)
 // this script is 8.5kB (less if we minify it)

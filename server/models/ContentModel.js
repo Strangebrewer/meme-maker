@@ -58,6 +58,7 @@ export default class Content extends BaseModel {
 	}
 
 	async updateContent(_id, data, options) {
+		console.log('data:::', data);
 		options = { ...options, new: true };
 
 		const canvasData = {

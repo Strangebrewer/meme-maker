@@ -26,13 +26,13 @@ const Text = ({ getFabric, pushVersion }) => {
                 />
             </ToolbarButton>
 
-            <ToolbarButton onClick={newCalendar}>
+            {/* <ToolbarButton onClick={newCalendar}>
                 <Icon
                     path={mdiCalendarMonthOutline}
                     title="add calendar"
                     size={1.2}
                 />
-            </ToolbarButton>
+            </ToolbarButton> */}
         </>
     )
 }

@@ -3,17 +3,19 @@ const Schema = mongoose.Schema;
 import slugify from 'slugify';
 
 const OrganizationSchema = new Schema({
-   name: String,
-   normalizedName: String,
-   slug: String,
-   users: [{ type: Schema.Types.ObjectId, ref: 'User' }]
+    name: { type: String, required: true, default: 'New Organization' },
+    normalizedName: String,
+    slug: String,
+    users: [{ type: Schema.Types.ObjectId, ref: 'User' }]
 }, { timestamps: true });
 
 OrganizationSchema.pre('save', function (next) {
     console.log('running the pre-save function');
-    this.normalizedName = this.name.toLowerCase();
+    if (this.name) {
+        this.normalizedName = this.name.toLowerCase();
+        this.slug = slugify(this.name, { lower: true });
+    }
     console.log('this.modifiedPaths():::', this.modifiedPaths());
-    this.slug = slugify(this.name, { lower: true });
     next();
 });
 
