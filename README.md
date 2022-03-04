@@ -1,6 +1,6 @@
 # Meme Maker
 
-Graphical interface for creating... memes! Or slides, or funny pictures - whatever you want to call them, I suppose. Capabilities are somewhat similar to something like PowerPoint. You can add text boxes, basic shapes, SVGs, images, drop shadows, and outlines. At some point I'd like to add pre-built widgets, like a weather display, a calendar, a clock, etc.
+Graphical interface for creating... memes! Or slides, or funny pictures - whatever you want to call them. Capabilities are somewhat similar to something like PowerPoint: you can add text boxes, basic shapes, SVGs, images, drop shadows, and outlines. At some point I'd like to add pre-built widgets, like a weather display, a calendar, a clock, etc.
 
 For now, the core functionality is working, but this was a work in progress, and, like many of you, I am a collector of unfinished projects. But it's a fun project and I'd like to actually get it fully functional some day.
 
