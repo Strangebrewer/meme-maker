@@ -29,3 +29,5 @@ On the Canvas edit page, you have the main toolbar at the top, a more detailed s
 
 ### Saving
 The whole point of this is to be able to save the canvas as an image once it's done. The functionality is in place to save the canvas to an AWS S3 bucket as a webpage, but you'll need to use your own AWS account for that. To do so, just add the relevant AWS values to the `.env`. If you do that, you can see the saved AWS page by clicking the circle icon on the top-left of the canvas thumbnail on the main Canvas page. Display details aren't ironed out just yet, so scale and placement on the screen may not be correct. Functionality for saving the canvas as an image directly to your computer will be relatively easy to setup and will be forthcoming (provided I find the time).
+
+Note: An app like this in production would obviously have paid subscriptions to things like AWS & Cloudinary and would have its own DB, but... I'm not tryin to pay for your memes, mannnn. Have fun!
